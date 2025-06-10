@@ -3,12 +3,14 @@
 import { useEffect, useState } from "react";
 import InteractiveMap from "../components/InteractiveMap";
 import ImageModal from "../components/ImageModal";
+import CameraCapture from "../components/CameraCapture";
 import { MapData, MapMarker, MapDataService } from "../types/map";
 
 export default function Home() {
   const [mapData, setMapData] = useState<MapData | null>(null);
   const [selectedMarker, setSelectedMarker] = useState<MapMarker | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isCameraOpen, setIsCameraOpen] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -34,6 +36,23 @@ export default function Home() {
   const handleCloseModal = () => {
     setIsModalOpen(false);
     setSelectedMarker(null);
+  };
+
+  const handleNewMarker = (newMarker: MapMarker) => {
+    if (mapData) {
+      setMapData({
+        ...mapData,
+        markers: [...mapData.markers, newMarker],
+      });
+    }
+  };
+
+  const handleOpenCamera = () => {
+    setIsCameraOpen(true);
+  };
+
+  const handleCloseCamera = () => {
+    setIsCameraOpen(false);
   };
 
   if (loading) {
@@ -88,7 +107,7 @@ export default function Home() {
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Map Section */}
-        <div className="ice-cream-bg rounded-3xl shadow-2xl p-8 mb-8 sparkle border-4 border-white">
+        <div className="ice-cream-bg rounded-3xl shadow-2xl p-8 mb-8 sparkle border-4 border-white relative">
           <h2 className="text-3xl font-bold text-gray-800 mb-6 text-center">
             🗺️ Explore Sweet Cleanup Spots! 🍦 ({mapData.markers.length} magical
             markers)
@@ -99,6 +118,15 @@ export default function Home() {
               onMarkerClick={handleMarkerClick}
             />
           </div>
+
+          {/* Floating Action Button for Camera */}
+          <button
+            onClick={handleOpenCamera}
+            className="absolute bottom-6 right-6 w-16 h-16 lollipop-btn rounded-full shadow-2xl hover:scale-110 transition-all duration-300 flex items-center justify-center sparkle"
+            title="Report new trash location"
+          >
+            <span className="text-2xl">📸</span>
+          </button>
         </div>
 
         {/* Info Section */}
@@ -106,7 +134,7 @@ export default function Home() {
           <h3 className="text-3xl font-bold text-gray-800 mb-6 text-center">
             🌟 How to Make Magic Happen! ✨
           </h3>
-          <div className="grid md:grid-cols-3 gap-6">
+          <div className="grid md:grid-cols-4 gap-6">
             <div className="text-center p-6 bg-gradient-to-br from-pink-200 to-pink-300 rounded-2xl shadow-lg border-2 border-white transform hover:scale-105 transition-all duration-300">
               <div className="w-16 h-16 bg-gradient-to-br from-pink-400 to-red-400 rounded-full flex items-center justify-center mx-auto mb-4 sparkle">
                 <span className="text-white font-bold text-2xl">🎯</span>
@@ -142,6 +170,18 @@ export default function Home() {
                 Zoom and pan the rainbow map to explore different cleanup zones!
               </p>
             </div>
+
+            <div className="text-center p-6 bg-gradient-to-br from-orange-200 to-yellow-300 rounded-2xl shadow-lg border-2 border-white transform hover:scale-105 transition-all duration-300">
+              <div className="w-16 h-16 bg-gradient-to-br from-orange-400 to-yellow-400 rounded-full flex items-center justify-center mx-auto mb-4 sparkle">
+                <span className="text-white font-bold text-2xl">📷</span>
+              </div>
+              <h4 className="font-bold text-gray-800 mb-2 text-xl">
+                Report New Trash
+              </h4>
+              <p className="text-gray-700">
+                Use the camera button to report new trash locations instantly!
+              </p>
+            </div>
           </div>
 
           <div className="mt-8 text-center">
@@ -165,6 +205,14 @@ export default function Home() {
         isOpen={isModalOpen}
         onClose={handleCloseModal}
       />
+
+      {/* Camera Capture */}
+      {isCameraOpen && (
+        <CameraCapture
+          onNewMarker={handleNewMarker}
+          onClose={handleCloseCamera}
+        />
+      )}
     </div>
   );
 }
