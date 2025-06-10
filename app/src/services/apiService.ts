@@ -7,7 +7,9 @@ import {
   MapMarker,
 } from "../types/map";
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
+// Use the same origin for API calls when running in production/development
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 
+  (typeof window !== 'undefined' ? window.location.origin : 'http://localhost:3000');
 
 export class ApiService {
   /**
@@ -378,7 +380,7 @@ export class ApiService {
    * Check API health
    */
   static async healthCheck(): Promise<{ status: string; timestamp: string }> {
-    const response = await fetch(`${API_BASE_URL}/health`);
+    const response = await fetch(`${API_BASE_URL}/api/health`);
 
     if (!response.ok) {
       throw new Error(`Health check failed: ${response.statusText}`);

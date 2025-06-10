@@ -1,5 +1,5 @@
-import { database } from "../config/database";
-import { ImageRow, ImageStats, HeatmapBounds } from "../types";
+import { database } from "../database";
+import { ImageRow, ImageStats, HeatmapBounds } from "../../types/api";
 
 interface ImageData {
   id?: number;
@@ -86,11 +86,11 @@ export class Image {
   // Get all images with coordinates (for heatmap)
   static async getAllWithCoordinates(): Promise<ImageRow[]> {
     const sql = `
-            SELECT id, filename, latitude, longitude, upload_timestamp
-            FROM images
-            WHERE latitude IS NOT NULL AND longitude IS NOT NULL
-            ORDER BY upload_timestamp DESC
-        `;
+        SELECT id, filename, latitude, longitude, upload_timestamp
+        FROM images
+        WHERE latitude IS NOT NULL AND longitude IS NOT NULL
+        ORDER BY upload_timestamp DESC
+    `;
 
     return await database.query(sql);
   }
@@ -132,4 +132,4 @@ export class Image {
       avgFileSize: results[2][0].avg_file_size || 0,
     };
   }
-}
+} 
