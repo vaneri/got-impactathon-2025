@@ -1,2 +1,9 @@
 packages:
-  - "app"
+  - geotrash
+
+ignoredBuiltDependencies:
+  - sharp
+  - unrs-resolver
+
+onlyBuiltDependencies:
+  - "@tailwindcss/oxide"

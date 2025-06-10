@@ -4,10 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "app:dev": "pnpm --filter app dev",
-    "app:build": "pnpm --filter app build",
-    "app:start": "pnpm --filter app start",
-    "app:lint": "pnpm --filter app lint"
+    "app:dev": "pnpm --filter geotrash dev",
+    "app:build": "pnpm --filter geotrash build",
+    "app:start": "pnpm --filter geotrash start",
+    "app:lint": "pnpm --filter geotrash lint"
   },
   "keywords": [],
   "author": "",
