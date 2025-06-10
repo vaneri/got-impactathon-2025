@@ -1,0 +1,30 @@
+{
+  "name": "got-impactathon-2025",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "pnpm --filter geotrash dev",
+    "start": "pnpm --filter geotrash dev",
+    "build": "pnpm run app:build && pnpm run api:build",
+    "app:dev": "pnpm --filter geotrash dev",
+    "app:build": "pnpm --filter geotrash build",
+    "app:start": "pnpm --filter geotrash start",
+    "app:lint": "pnpm --filter geotrash lint",
+    "api:dev": "pnpm --filter trash-api dev",
+    "api:build": "pnpm --filter trash-api build",
+    "api:start": "pnpm --filter trash-api start",
+    "install:all": "pnpm install && pnpm --filter app install && pnpm --filter trash-api install"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "engines": {
+    "node": ">=20",
+    "pnpm": "10"
+  },
+  "packageManager": "pnpm@10.12.1",
+  "devDependencies": {
+    "@types/node": "^20.19.0"
+  }
+}

@@ -1,0 +1,11 @@
+packages:
+  - "app"
+
+ignoredBuiltDependencies:
+  - sharp
+  - unrs-resolver
+
+onlyBuiltDependencies:
+  - "@tailwindcss/oxide"
+  - "app"
+  - "api"
