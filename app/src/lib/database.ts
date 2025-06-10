@@ -38,7 +38,8 @@ class Database {
     }
   }
 
-  async query(sql: string, params: any[] = []): Promise<any> {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  async query(sql: string, params: any[] = []): Promise<any[]> {
     if (!this.pool) {
       throw new Error("Database not connected");
     }

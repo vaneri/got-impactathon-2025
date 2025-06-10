@@ -4,7 +4,7 @@ import { Image } from '../../../../lib/models/Image';
 
 // Ensure database connection
 let dbConnected = false;
-async function ensureConnection() {
+async function ensureConnection(): Promise<void> {
   if (!dbConnected) {
     await database.connect();
     dbConnected = true;

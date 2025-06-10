@@ -25,7 +25,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'No image file provided' }, { status: 400 });
     }
 
-    let coords = {
+    const coords = {
       latitude: undefined as number | undefined,
       longitude: undefined as number | undefined,
     };

@@ -109,7 +109,8 @@ export class Image {
   }
 
   // Delete image
-  static async delete(id: number): Promise<any> {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  static async delete(id: number): Promise<any[]> {
     const sql = `DELETE FROM images WHERE id = $1`;
     return await database.query(sql, [id]);
   }

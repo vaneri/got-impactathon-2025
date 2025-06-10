@@ -2,7 +2,7 @@ import { database } from './database';
 
 let isInitialized = false;
 
-export async function initializeDatabase() {
+export async function initializeDatabase(): Promise<void> {
   if (isInitialized) {
     return;
   }
@@ -17,7 +17,4 @@ export async function initializeDatabase() {
   }
 }
 
-// Auto-initialize in development
-if (process.env.NODE_ENV === 'development') {
-  initializeDatabase().catch(console.error);
-} 
+// Database will be initialized when API routes are called 

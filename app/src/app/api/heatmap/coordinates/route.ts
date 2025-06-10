@@ -1,18 +1,18 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { database } from '../../../../lib/database';
 import { Image } from '../../../../lib/models/Image';
 import { HeatmapPoint } from '../../../../types/api';
 
 // Ensure database connection
 let dbConnected = false;
-async function ensureConnection() {
+async function ensureConnection(): Promise<void> {
   if (!dbConnected) {
     await database.connect();
     dbConnected = true;
   }
 }
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     await ensureConnection();
     

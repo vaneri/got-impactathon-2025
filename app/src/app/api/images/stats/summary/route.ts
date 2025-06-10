@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { database } from '../../../../../lib/database';
 import { Image } from '../../../../../lib/models/Image';
 
@@ -11,7 +11,7 @@ async function ensureConnection() {
   }
 }
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     await ensureConnection();
     
