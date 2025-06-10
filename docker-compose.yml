@@ -1,0 +1,62 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: geotag_mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: geotag_images
+      MYSQL_USER: geotag_user
+      MYSQL_PASSWORD: geotag_password
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./database/init:/docker-entrypoint-initdb.d
+    networks:
+      - geotag_network
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: geotag_phpmyadmin
+    restart: unless-stopped
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+      MYSQL_ROOT_PASSWORD: rootpassword
+    ports:
+      - "8080:80"
+    depends_on:
+      - mysql
+    networks:
+      - geotag_network
+
+  app:
+    build: .
+    container_name: geotag_app
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+      - DB_HOST=mysql
+      - DB_PORT=3306
+      - DB_NAME=geotag_images
+      - DB_USER=geotag_user
+      - DB_PASSWORD=geotag_password
+    depends_on:
+      - mysql
+    volumes:
+      - ./src:/app/src
+      - ./uploads:/app/uploads
+    networks:
+      - geotag_network
+
+volumes:
+  mysql_data:
+
+networks:
+  geotag_network:
+    driver: bridge 
