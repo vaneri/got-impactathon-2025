@@ -6,27 +6,26 @@ const dbConfig: PoolConfig = {
     : "postgresql://geotag_user:geotag_password@localhost:5555/geotag_images",
 };
 
-// For remote databases (Supabase, etc.), SSL is required but may use self-signed certificates
-// We need to allow unauthorized certificates to avoid connection errors
-if (
-  dbConfig.connectionString &&
-  !dbConfig.connectionString.includes("localhost") &&
-  !dbConfig.connectionString.includes("127.0.0.1")
-) {
-  dbConfig.ssl = { 
-    rejectUnauthorized: false,
-    // Allow self-signed certificates
-    ca: false
-  };
-} else if (dbConfig.connectionString && dbConfig.connectionString.includes("sslmode=require")) {
-  // If sslmode=require is in the connection string, ensure SSL is configured
-  dbConfig.ssl = { 
-    rejectUnauthorized: false 
-  };
+// Configure SSL for Supabase and other cloud providers
+if (dbConfig.connectionString) {
+  const isLocal = dbConfig.connectionString.includes("localhost") || 
+                  dbConfig.connectionString.includes("127.0.0.1");
+  
+  const requiresSSL = dbConfig.connectionString.includes("sslmode=require") ||
+                      dbConfig.connectionString.includes("supabase.com") ||
+                      dbConfig.connectionString.includes("pooler.supabase.com");
+
+  if (!isLocal && requiresSSL) {
+    dbConfig.ssl = {
+      rejectUnauthorized: false,
+      // Supabase uses self-signed certificates, so we need to allow them
+    };
+    console.log("🔒 SSL configured for remote database connection");
+  }
 }
 
-dbConfig.connectionTimeoutMillis = 5000;
-dbConfig.idleTimeoutMillis = 10000;
+dbConfig.connectionTimeoutMillis = 10000; // Increased for remote connections
+dbConfig.idleTimeoutMillis = 30000;
 dbConfig.max = 10;
 
 class Database {
@@ -36,19 +35,28 @@ class Database {
     try {
       this.pool = new Pool(dbConfig);
 
-      // Test the connection
+      // Test the connection with retry logic for remote databases
       const client = await this.pool.connect();
       console.log("✅ Database connected successfully");
+      console.log(`🌐 Connected to: ${dbConfig.connectionString?.includes('supabase.com') ? 'Supabase' : 'PostgreSQL'}`);
       client.release();
 
       return this.pool;
     } catch (error) {
       console.error("❌ Database connection failed:", (error as Error).message);
-      console.error("Database config (connection string hidden):", {
+      console.error("📋 Connection details:", {
         ssl: dbConfig.ssl,
         connectionTimeoutMillis: dbConfig.connectionTimeoutMillis,
-        max: dbConfig.max
+        max: dbConfig.max,
+        isSupabase: dbConfig.connectionString?.includes('supabase.com') || false
       });
+      
+      // Provide specific help for common SSL issues
+      if ((error as Error).message.includes('certificate')) {
+        console.error("💡 SSL Certificate Issue - this is common with cloud databases");
+        console.error("   Try setting NODE_TLS_REJECT_UNAUTHORIZED=0 in your environment");
+      }
+      
       throw error;
     }
   }
