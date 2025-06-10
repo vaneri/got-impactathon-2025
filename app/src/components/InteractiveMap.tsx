@@ -31,19 +31,35 @@ export default function InteractiveMap({
   onMarkerClick,
 }: InteractiveMapProps) {
   const [isClient, setIsClient] = useState(false);
+  const [L, setL] = useState<any>(null);
 
   useEffect(() => {
     setIsClient(true);
+    // Dynamically import Leaflet to avoid SSR issues
+    import("leaflet").then((leaflet) => {
+      setL(leaflet.default);
+    });
   }, []);
 
   // Don't render map on server side
-  if (!isClient) {
+  if (!isClient || !L) {
     return (
       <div className="w-full h-96 bg-gray-200 flex items-center justify-center rounded-lg">
         <p className="text-gray-600">Loading map...</p>
       </div>
     );
   }
+
+  // Create custom emoji icon
+  const createEmojiIcon = () => {
+    return L.divIcon({
+      html: '<div style="font-size: 32px; text-align: center; line-height: 1; filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.3));">🤢</div>',
+      className: "custom-emoji-icon",
+      iconSize: [40, 40],
+      iconAnchor: [20, 40],
+      popupAnchor: [0, -40],
+    });
+  };
 
   return (
     <div className="w-full h-96 rounded-lg overflow-hidden shadow-lg">
@@ -62,6 +78,7 @@ export default function InteractiveMap({
           <Marker
             key={marker.id}
             position={[marker.latitude, marker.longitude]}
+            icon={createEmojiIcon()}
             eventHandlers={{
               click: () => onMarkerClick(marker),
             }}
@@ -69,7 +86,7 @@ export default function InteractiveMap({
             <Popup>
               <div className="text-center p-2">
                 <h3 className="font-bold text-xl mb-2 text-gray-800 flex items-center justify-center gap-2">
-                  <span className="text-lg">🌟</span>
+                  <span className="text-lg">🤢</span>
                   {marker.title}
                   <span className="text-lg">✨</span>
                 </h3>
