@@ -67,18 +67,22 @@ export default function InteractiveMap({
             }}
           >
             <Popup>
-              <div className="text-center">
-                <h3 className="font-semibold text-lg mb-1">{marker.title}</h3>
+              <div className="text-center p-2">
+                <h3 className="font-bold text-xl mb-2 text-gray-800 flex items-center justify-center gap-2">
+                  <span className="text-lg">🌟</span>
+                  {marker.title}
+                  <span className="text-lg">✨</span>
+                </h3>
                 {marker.description && (
-                  <p className="text-sm text-gray-600 mb-2">
-                    {marker.description}
+                  <p className="text-sm text-gray-600 mb-3">
+                    🍭 {marker.description} 🌈
                   </p>
                 )}
                 <button
                   onClick={() => onMarkerClick(marker)}
-                  className="bg-blue-500 text-white px-3 py-1 rounded text-sm hover:bg-blue-600 transition-colors"
+                  className="lollipop-btn text-white px-4 py-2 rounded-full text-sm font-bold hover:scale-105 transition-all duration-300 shadow-lg"
                 >
-                  View Image
+                  ✨ View Sweet Image! 🍦
                 </button>
               </div>
             </Popup>

@@ -2,8 +2,27 @@
 @import "leaflet/dist/leaflet.css";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: linear-gradient(
+    135deg,
+    #ff9a9e 0%,
+    #fecfef 25%,
+    #fecfef 50%,
+    #fad0c4 75%,
+    #a8edea 100%
+  );
+  --foreground: #2d3748;
+  --rainbow-1: #ff6b6b;
+  --rainbow-2: #4ecdc4;
+  --rainbow-3: #45b7d1;
+  --rainbow-4: #96ceb4;
+  --rainbow-5: #ffeaa7;
+  --rainbow-6: #dda0dd;
+  --ice-cream-pink: #ffb3d9;
+  --ice-cream-mint: #b3ffcc;
+  --ice-cream-vanilla: #fff5b7;
+  --lollipop-red: #ff4757;
+  --lollipop-blue: #3742fa;
+  --sparkle: #ffd700;
 }
 
 @theme inline {
@@ -13,15 +32,126 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* Rainbow sparkle animation */
+@keyframes sparkle {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(1.1) rotate(180deg);
   }
 }
 
+@keyframes rainbow {
+  0% {
+    filter: hue-rotate(0deg);
+  }
+  100% {
+    filter: hue-rotate(360deg);
+  }
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+/* Sparkle effects */
+.sparkle {
+  position: relative;
+  overflow: hidden;
+}
+
+.sparkle::before {
+  content: "✨";
+  position: absolute;
+  top: 10%;
+  right: 10%;
+  animation: sparkle 2s infinite;
+  font-size: 1.2rem;
+  z-index: 1;
+}
+
+.sparkle::after {
+  content: "⭐";
+  position: absolute;
+  bottom: 10%;
+  left: 10%;
+  animation: sparkle 2.5s infinite reverse;
+  font-size: 1rem;
+  z-index: 1;
+}
+
+/* Rainbow gradient backgrounds */
+.rainbow-bg {
+  background: linear-gradient(
+    45deg,
+    #ff6b6b,
+    #4ecdc4,
+    #45b7d1,
+    #96ceb4,
+    #ffeaa7,
+    #dda0dd
+  );
+  background-size: 300% 300%;
+  animation: rainbow 4s ease infinite;
+}
+
+.ice-cream-bg {
+  background: linear-gradient(135deg, #ffb3d9 0%, #b3ffcc 50%, #fff5b7 100%);
+}
+
+.lollipop-btn {
+  background: linear-gradient(45deg, #ff4757, #3742fa);
+  background-size: 200% 200%;
+  animation: rainbow 3s ease infinite;
+  border-radius: 50px;
+  box-shadow: 0 4px 15px rgba(255, 71, 87, 0.4);
+  transition: all 0.3s ease;
+}
+
+.lollipop-btn:hover {
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 8px 25px rgba(255, 71, 87, 0.6);
+}
+
 body {
-  background: var(--background);
+  background: linear-gradient(
+    135deg,
+    #ff9a9e 0%,
+    #fecfef 25%,
+    #fecfef 50%,
+    #fad0c4 75%,
+    #a8edea 100%
+  );
+  background-attachment: fixed;
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: "Comic Sans MS", cursive, Arial, Helvetica, sans-serif;
+  min-height: 100vh;
+}
+
+/* Fun scrollbar */
+::-webkit-scrollbar {
+  width: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: linear-gradient(45deg, #ffb3d9, #b3ffcc);
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(45deg, #ff4757, #3742fa);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(45deg, #ff3838, #2f32e6);
 }

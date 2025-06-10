@@ -64,60 +64,96 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen">
       {/* Header */}
-      <header className="bg-white shadow-sm border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <h1 className="text-3xl font-bold text-gray-900">GeoTrash!</h1>
-          <p className="mt-2 text-gray-600">
-            Point the cam, click, and let GeoTrash do the dirty work—so you can
-            spend more time picking up trash and less time hunting it down.
+      <header className="rainbow-bg shadow-lg border-b-4 border-white sparkle">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <h1 className="text-5xl font-bold text-white drop-shadow-lg mb-2 animate-bounce">
+            🌈 GeoTrash! ✨
+          </h1>
+          <p className="text-xl text-white drop-shadow-md leading-relaxed">
+            🍭 Point the cam, click, and let GeoTrash do the dirty work—so you
+            can spend more time picking up trash and less time hunting it down!
+            🌍💚
           </p>
+          <div className="mt-4 flex gap-2">
+            <span className="text-2xl animate-pulse">🗑️</span>
+            <span className="text-2xl animate-pulse">♻️</span>
+            <span className="text-2xl animate-pulse">🌱</span>
+            <span className="text-2xl animate-pulse">🌸</span>
+          </div>
         </div>
       </header>
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Map Section */}
-        <div className="bg-white rounded-lg shadow-lg p-6 mb-8">
-          <h2 className="text-xl font-semibold text-gray-900 mb-4">
-            Explore Locations ({mapData.markers.length} markers)
+        <div className="ice-cream-bg rounded-3xl shadow-2xl p-8 mb-8 sparkle border-4 border-white">
+          <h2 className="text-3xl font-bold text-gray-800 mb-6 text-center">
+            🗺️ Explore Sweet Cleanup Spots! 🍦 ({mapData.markers.length} magical
+            markers)
           </h2>
-          <InteractiveMap mapData={mapData} onMarkerClick={handleMarkerClick} />
+          <div className="rounded-2xl overflow-hidden border-4 border-white shadow-xl">
+            <InteractiveMap
+              mapData={mapData}
+              onMarkerClick={handleMarkerClick}
+            />
+          </div>
         </div>
 
         {/* Info Section */}
-        <div className="bg-white rounded-lg shadow-lg p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">
-            How to Use
+        <div className="ice-cream-bg rounded-3xl shadow-2xl p-8 sparkle border-4 border-white">
+          <h3 className="text-3xl font-bold text-gray-800 mb-6 text-center">
+            🌟 How to Make Magic Happen! ✨
           </h3>
-          <div className="grid md:grid-cols-3 gap-4">
-            <div className="text-center p-4 bg-blue-50 rounded-lg">
-              <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center mx-auto mb-2">
-                <span className="text-white font-bold">1</span>
+          <div className="grid md:grid-cols-3 gap-6">
+            <div className="text-center p-6 bg-gradient-to-br from-pink-200 to-pink-300 rounded-2xl shadow-lg border-2 border-white transform hover:scale-105 transition-all duration-300">
+              <div className="w-16 h-16 bg-gradient-to-br from-pink-400 to-red-400 rounded-full flex items-center justify-center mx-auto mb-4 sparkle">
+                <span className="text-white font-bold text-2xl">🎯</span>
               </div>
-              <h4 className="font-medium text-gray-900 mb-1">Click Markers</h4>
-              <p className="text-sm text-gray-600">
-                Click on any map marker to view more information
+              <h4 className="font-bold text-gray-800 mb-2 text-xl">
+                Click Markers
+              </h4>
+              <p className="text-gray-700">
+                Click on any sparkly map marker to discover cleanup treasures!
               </p>
             </div>
-            <div className="text-center p-4 bg-green-50 rounded-lg">
-              <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-2">
-                <span className="text-white font-bold">2</span>
+
+            <div className="text-center p-6 bg-gradient-to-br from-green-200 to-teal-300 rounded-2xl shadow-lg border-2 border-white transform hover:scale-105 transition-all duration-300">
+              <div className="w-16 h-16 bg-gradient-to-br from-green-400 to-teal-400 rounded-full flex items-center justify-center mx-auto mb-4 sparkle">
+                <span className="text-white font-bold text-2xl">📸</span>
               </div>
-              <h4 className="font-medium text-gray-900 mb-1">View Images</h4>
-              <p className="text-sm text-gray-600">
-                See detailed images and descriptions in the modal
+              <h4 className="font-bold text-gray-800 mb-2 text-xl">
+                View Sweet Images
+              </h4>
+              <p className="text-gray-700">
+                See delightful images and descriptions in our magical modal!
               </p>
             </div>
-            <div className="text-center p-4 bg-purple-50 rounded-lg">
-              <div className="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center mx-auto mb-2">
-                <span className="text-white font-bold">3</span>
+
+            <div className="text-center p-6 bg-gradient-to-br from-purple-200 to-indigo-300 rounded-2xl shadow-lg border-2 border-white transform hover:scale-105 transition-all duration-300">
+              <div className="w-16 h-16 bg-gradient-to-br from-purple-400 to-indigo-400 rounded-full flex items-center justify-center mx-auto mb-4 sparkle">
+                <span className="text-white font-bold text-2xl">🧭</span>
               </div>
-              <h4 className="font-medium text-gray-900 mb-1">Navigate</h4>
-              <p className="text-sm text-gray-600">
-                Zoom and pan the map to explore different areas
+              <h4 className="font-bold text-gray-800 mb-2 text-xl">
+                Navigate Like a Pro
+              </h4>
+              <p className="text-gray-700">
+                Zoom and pan the rainbow map to explore different cleanup zones!
               </p>
+            </div>
+          </div>
+
+          <div className="mt-8 text-center">
+            <p className="text-2xl text-gray-800 font-semibold mb-4">
+              🌍 Together we make the world sweeter, one cleanup at a time! 🍭
+            </p>
+            <div className="flex justify-center gap-4 text-3xl">
+              <span className="animate-bounce">🌈</span>
+              <span className="animate-pulse">💖</span>
+              <span className="animate-bounce">🌟</span>
+              <span className="animate-pulse">🌍</span>
+              <span className="animate-bounce">✨</span>
             </div>
           </div>
         </div>

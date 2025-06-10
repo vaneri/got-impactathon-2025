@@ -39,30 +39,18 @@ export default function ImageModal({
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       {/* Backdrop */}
       <div
-        className="absolute inset-0 bg-black bg-opacity-75 transition-opacity"
+        className="absolute inset-0 bg-gradient-to-br from-purple-900 to-pink-900 bg-opacity-75 transition-opacity backdrop-blur-sm"
         onClick={onClose}
       />
 
       {/* Modal */}
-      <div className="relative bg-white rounded-lg shadow-xl max-w-4xl max-h-[90vh] overflow-hidden mx-4">
+      <div className="relative ice-cream-bg rounded-3xl shadow-2xl max-w-4xl max-h-[90vh] overflow-hidden mx-4 border-4 border-white sparkle">
         {/* Close button */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 z-10 bg-black bg-opacity-50 text-white rounded-full p-2 hover:bg-opacity-75 transition-colors"
+          className="absolute top-6 right-6 z-10 lollipop-btn w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-xl hover:scale-110 transition-all duration-300"
         >
-          <svg
-            className="w-6 h-6"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M6 18L18 6M6 6l12 12"
-            />
-          </svg>
+          ✕
         </button>
 
         {/* Image */}
@@ -72,23 +60,37 @@ export default function ImageModal({
             alt={marker.imageAlt || marker.title}
             width={800}
             height={600}
-            className="w-full h-auto max-h-[70vh] object-cover"
+            className="w-full h-auto max-h-[70vh] object-cover rounded-t-2xl"
             priority
           />
+          <div className="absolute top-4 left-4 bg-white bg-opacity-90 rounded-full px-4 py-2 sparkle">
+            <span className="text-2xl">🌟</span>
+          </div>
         </div>
 
         {/* Content */}
-        <div className="p-6">
-          <h3 className="text-2xl font-bold text-gray-900 mb-2">
+        <div className="p-8">
+          <h3 className="text-4xl font-bold text-gray-800 mb-4 flex items-center gap-3">
+            <span className="text-3xl">📍</span>
             {marker.title}
+            <span className="text-3xl">✨</span>
           </h3>
           {marker.description && (
-            <p className="text-gray-700 text-lg">{marker.description}</p>
+            <p className="text-xl text-gray-700 mb-6 leading-relaxed">
+              🍭 {marker.description} 🌈
+            </p>
           )}
-          <div className="mt-4 text-sm text-gray-500">
-            <p>
-              Coordinates: {marker.latitude.toFixed(4)},{" "}
+          <div className="bg-gradient-to-r from-pink-100 to-purple-100 rounded-2xl p-4 border-2 border-white">
+            <p className="text-lg text-gray-600 flex items-center gap-2">
+              <span className="text-2xl">🧭</span>
+              <strong>Sweet Coordinates:</strong> {marker.latitude.toFixed(4)},{" "}
               {marker.longitude.toFixed(4)}
+              <span className="text-2xl">🗺️</span>
+            </p>
+          </div>
+          <div className="mt-6 text-center">
+            <p className="text-2xl">
+              🌍 Let's make this spot sparkle clean! ✨
             </p>
           </div>
         </div>
