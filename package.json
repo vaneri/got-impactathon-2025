@@ -4,10 +4,18 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "app:dev": "pnpm --filter geotrash dev",
-    "app:build": "pnpm --filter geotrash build",
-    "app:start": "pnpm --filter geotrash start",
-    "app:lint": "pnpm --filter geotrash lint"
+    "dev": "pnpm --filter app dev",
+    "start": "pnpm --filter app dev",
+    "build": "pnpm run app:build && pnpm run api:build",
+    "app:dev": "pnpm --filter app dev",
+    "app:build": "pnpm --filter app build",
+    "app:start": "pnpm --filter app start",
+    "app:lint": "pnpm --filter app lint",
+    "api:dev": "pnpm --filter trash-api dev",
+    "api:build": "pnpm --filter trash-api build",
+    "api:start": "pnpm --filter trash-api start",
+    "dev:all": "concurrently \"pnpm run app:dev\" \"pnpm run api:dev\"",
+    "install:all": "pnpm install && pnpm --filter app install && pnpm --filter trash-api install"
   },
   "keywords": [],
   "author": "",
@@ -16,5 +24,9 @@
     "node": ">=20",
     "pnpm": "10"
   },
-  "packageManager": "pnpm@10.12.1"
+  "packageManager": "pnpm@10.12.1",
+  "devDependencies": {
+    "@types/node": "^20.19.0",
+    "concurrently": "^9.2.2"
+  }
 }

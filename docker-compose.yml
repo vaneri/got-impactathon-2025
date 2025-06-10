@@ -1,9 +1,9 @@
-version: '3.8'
+version: "3.8"
 
 services:
   mysql:
     image: mysql:8.0
-    container_name: geotag_mysql
+    container_name: trash_network
     restart: unless-stopped
     environment:
       MYSQL_ROOT_PASSWORD: rootpassword
@@ -16,7 +16,7 @@ services:
       - mysql_data:/var/lib/mysql
       - ./database/init:/docker-entrypoint-initdb.d
     networks:
-      - geotag_network
+      - trash_network
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
@@ -31,32 +31,11 @@ services:
     depends_on:
       - mysql
     networks:
-      - geotag_network
-
-  app:
-    build: .
-    container_name: geotag_app
-    restart: unless-stopped
-    ports:
-      - "3000:3000"
-    environment:
-      - NODE_ENV=development
-      - DB_HOST=mysql
-      - DB_PORT=3306
-      - DB_NAME=geotag_images
-      - DB_USER=geotag_user
-      - DB_PASSWORD=geotag_password
-    depends_on:
-      - mysql
-    volumes:
-      - ./src:/app/src
-      - ./uploads:/app/uploads
-    networks:
-      - geotag_network
+      - trash_network
 
 volumes:
   mysql_data:
 
 networks:
-  geotag_network:
-    driver: bridge 
+  trash_network:
+    driver: bridge
