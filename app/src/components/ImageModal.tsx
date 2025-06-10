@@ -36,7 +36,7 @@ export default function ImageModal({
   if (!isOpen || !marker) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center">
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center">
       {/* Backdrop */}
       <div
         className="absolute inset-0 bg-gradient-to-br from-purple-900 to-pink-900 bg-opacity-75 transition-opacity backdrop-blur-sm"
@@ -44,11 +44,11 @@ export default function ImageModal({
       />
 
       {/* Modal */}
-      <div className="relative ice-cream-bg rounded-3xl shadow-2xl max-w-4xl max-h-[90vh] overflow-hidden mx-4 border-4 border-white sparkle">
+      <div className="relative ice-cream-bg rounded-3xl shadow-2xl max-w-4xl max-h-[90vh] overflow-hidden mx-4 border-4 border-white sparkle z-[10000]">
         {/* Close button */}
         <button
           onClick={onClose}
-          className="absolute top-6 right-6 z-10 lollipop-btn w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-xl hover:scale-110 transition-all duration-300"
+          className="absolute top-6 right-6 z-[10001] lollipop-btn w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-xl hover:scale-110 transition-all duration-300"
         >
           ✕
         </button>

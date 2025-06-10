@@ -81,9 +81,15 @@ export default function InteractiveMap({
             icon={createEmojiIcon()}
             eventHandlers={{
               click: () => onMarkerClick(marker),
+              mouseover: (e) => {
+                e.target.openPopup();
+              },
+              mouseout: (e) => {
+                e.target.closePopup();
+              },
             }}
           >
-            <Popup>
+            <Popup closeButton={false} autoClose={false} closeOnClick={false}>
               <div className="text-center p-2">
                 <h3 className="font-bold text-xl mb-2 text-gray-800 flex items-center justify-center gap-2">
                   <span className="text-lg">🤢</span>
@@ -95,12 +101,9 @@ export default function InteractiveMap({
                     🍭 {marker.description} 🌈
                   </p>
                 )}
-                <button
-                  onClick={() => onMarkerClick(marker)}
-                  className="lollipop-btn text-white px-4 py-2 rounded-full text-sm font-bold hover:scale-105 transition-all duration-300 shadow-lg"
-                >
-                  ✨ View Sweet Image! 🍦
-                </button>
+                <p className="text-xs text-gray-500 italic">
+                  Click marker to view image! 📸
+                </p>
               </div>
             </Popup>
           </Marker>

@@ -1,11 +1,11 @@
 packages:
-- geotrash
+  - "app"
 
 ignoredBuiltDependencies:
-- sharp
-- unrs-resolver
+  - sharp
+  - unrs-resolver
 
 onlyBuiltDependencies:
-- "@tailwindcss/oxide"
-- "app"
-- "api"
+  - "@tailwindcss/oxide"
+  - "app"
+  - "api"
