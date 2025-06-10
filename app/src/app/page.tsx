@@ -4,7 +4,8 @@ import { useEffect, useState } from "react";
 import InteractiveMap from "../components/InteractiveMap";
 import ImageModal from "../components/ImageModal";
 import CameraCapture from "../components/CameraCapture";
-import { MapData, MapMarker, MapDataService } from "../types/map";
+import { MapData, MapMarker } from "../types/map";
+import { ApiService } from "../services/apiService";
 
 export default function Home() {
   const [mapData, setMapData] = useState<MapData | null>(null);
@@ -12,14 +13,24 @@ export default function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isCameraOpen, setIsCameraOpen] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const loadMapData = async () => {
       try {
-        const data = await MapDataService.getMapData();
+        setError(null);
+        // First check if API is healthy
+        await ApiService.healthCheck();
+
+        // Load map data from API
+        const data = await ApiService.getMapData();
+        console.log("Map data loaded:", data);
         setMapData(data);
       } catch (error) {
         console.error("Failed to load map data:", error);
+        setError(
+          error instanceof Error ? error.message : "Failed to load data"
+        );
       } finally {
         setLoading(false);
       }
@@ -38,7 +49,7 @@ export default function Home() {
     setSelectedMarker(null);
   };
 
-  const handleNewMarker = (newMarker: MapMarker) => {
+  const handleNewMarker = async (newMarker: MapMarker) => {
     if (mapData) {
       setMapData({
         ...mapData,
@@ -61,16 +72,22 @@ export default function Home() {
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
           <p className="text-gray-600">Loading map data...</p>
+          <p className="text-sm text-gray-500 mt-2">Connecting to API...</p>
         </div>
       </div>
     );
   }
 
-  if (!mapData) {
+  if (error || !mapData) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <p className="text-red-600 mb-4">Failed to load map data</p>
+          <p className="text-red-600 mb-4">
+            {error || "Failed to load map data"}
+          </p>
+          <p className="text-sm text-gray-600 mb-4">
+            Make sure the API server is running on localhost:3000
+          </p>
           <button
             onClick={() => window.location.reload()}
             className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors"

@@ -33,6 +33,26 @@ export default function InteractiveMap({
   const [isClient, setIsClient] = useState(false);
   const [L, setL] = useState<typeof import("leaflet") | null>(null);
 
+  // Validate and sanitize map center coordinates
+  const safeCenter = {
+    latitude: isNaN(mapData.center.latitude)
+      ? 40.7128
+      : mapData.center.latitude,
+    longitude: isNaN(mapData.center.longitude)
+      ? -74.006
+      : mapData.center.longitude,
+  };
+
+  const safeZoom = isNaN(mapData.zoom) ? 12 : mapData.zoom;
+
+  console.log("InteractiveMap received:", {
+    originalCenter: mapData.center,
+    safeCenter,
+    originalZoom: mapData.zoom,
+    safeZoom,
+    markersCount: mapData.markers.length,
+  });
+
   useEffect(() => {
     setIsClient(true);
     // Dynamically import Leaflet to avoid SSR issues
@@ -64,8 +84,8 @@ export default function InteractiveMap({
   return (
     <div className="w-full h-96 rounded-lg overflow-hidden shadow-lg">
       <MapContainer
-        center={[mapData.center.latitude, mapData.center.longitude]}
-        zoom={mapData.zoom}
+        center={[safeCenter.latitude, safeCenter.longitude]}
+        zoom={safeZoom}
         style={{ height: "100%", width: "100%" }}
         className="rounded-lg"
       >
@@ -74,40 +94,44 @@ export default function InteractiveMap({
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
 
-        {mapData.markers.map((marker) => (
-          <Marker
-            key={marker.id}
-            position={[marker.latitude, marker.longitude]}
-            icon={createEmojiIcon()}
-            eventHandlers={{
-              click: () => onMarkerClick(marker),
-              mouseover: (e) => {
-                e.target.openPopup();
-              },
-              mouseout: (e) => {
-                e.target.closePopup();
-              },
-            }}
-          >
-            <Popup closeButton={false} autoClose={false} closeOnClick={false}>
-              <div className="text-center p-2">
-                <h3 className="font-bold text-xl mb-2 text-gray-800 flex items-center justify-center gap-2">
-                  <span className="text-lg">🤢</span>
-                  {marker.title}
-                  <span className="text-lg">✨</span>
-                </h3>
-                {marker.description && (
-                  <p className="text-sm text-gray-600 mb-3">
-                    🍭 {marker.description} 🌈
+        {mapData.markers
+          .filter(
+            (marker) => !isNaN(marker.latitude) && !isNaN(marker.longitude)
+          )
+          .map((marker) => (
+            <Marker
+              key={marker.id}
+              position={[marker.latitude, marker.longitude]}
+              icon={createEmojiIcon()}
+              eventHandlers={{
+                click: () => onMarkerClick(marker),
+                mouseover: (e) => {
+                  e.target.openPopup();
+                },
+                mouseout: (e) => {
+                  e.target.closePopup();
+                },
+              }}
+            >
+              <Popup closeButton={false} autoClose={false} closeOnClick={false}>
+                <div className="text-center p-2">
+                  <h3 className="font-bold text-xl mb-2 text-gray-800 flex items-center justify-center gap-2">
+                    <span className="text-lg">🤢</span>
+                    {marker.title}
+                    <span className="text-lg">✨</span>
+                  </h3>
+                  {marker.description && (
+                    <p className="text-sm text-gray-600 mb-3">
+                      🍭 {marker.description} 🌈
+                    </p>
+                  )}
+                  <p className="text-xs text-gray-500 italic">
+                    Click marker to view image! 📸
                   </p>
-                )}
-                <p className="text-xs text-gray-500 italic">
-                  Click marker to view image! 📸
-                </p>
-              </div>
-            </Popup>
-          </Marker>
-        ))}
+                </div>
+              </Popup>
+            </Marker>
+          ))}
       </MapContainer>
     </div>
   );

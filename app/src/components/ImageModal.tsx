@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import { MapMarker } from "../types/map";
 
@@ -15,6 +15,8 @@ export default function ImageModal({
   isOpen,
   onClose,
 }: ImageModalProps) {
+  const [imageError, setImageError] = useState(false);
+
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
@@ -25,6 +27,7 @@ export default function ImageModal({
     if (isOpen) {
       document.addEventListener("keydown", handleEscape);
       document.body.style.overflow = "hidden";
+      setImageError(false); // Reset error state when opening
     }
 
     return () => {
@@ -34,6 +37,9 @@ export default function ImageModal({
   }, [isOpen, onClose]);
 
   if (!isOpen || !marker) return null;
+
+  // Check if this is an API image (from our backend)
+  const isApiImage = marker.imageUrl.includes("/api/images/");
 
   return (
     <div className="fixed inset-0 z-[9999] flex items-center justify-center">
@@ -55,14 +61,38 @@ export default function ImageModal({
 
         {/* Image */}
         <div className="relative">
-          <Image
-            src={marker.imageUrl}
-            alt={marker.imageAlt || marker.title}
-            width={800}
-            height={600}
-            className="w-full h-auto max-h-[70vh] object-cover rounded-t-2xl"
-            priority
-          />
+          {!imageError ? (
+            isApiImage ? (
+              // Use regular img tag for API images to avoid Next.js restrictions
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={marker.imageUrl}
+                alt={marker.imageAlt || marker.title}
+                className="w-full h-auto max-h-[70vh] object-cover rounded-t-2xl"
+                onError={() => setImageError(true)}
+              />
+            ) : (
+              // Use Next.js Image for static images
+              <Image
+                src={marker.imageUrl}
+                alt={marker.imageAlt || marker.title}
+                width={800}
+                height={600}
+                className="w-full h-auto max-h-[70vh] object-cover rounded-t-2xl"
+                priority
+                onError={() => setImageError(true)}
+              />
+            )
+          ) : (
+            // Error fallback
+            <div className="w-full h-64 bg-gray-200 flex items-center justify-center rounded-t-2xl">
+              <div className="text-center text-gray-600">
+                <span className="text-6xl mb-4 block">📷</span>
+                <p className="text-lg">Image could not be loaded</p>
+                <p className="text-sm">Please check your API connection</p>
+              </div>
+            </div>
+          )}
           <div className="absolute top-4 left-4 bg-white bg-opacity-90 rounded-full px-4 py-2 sparkle">
             <span className="text-2xl">🌟</span>
           </div>
@@ -88,6 +118,19 @@ export default function ImageModal({
               <span className="text-2xl">🗺️</span>
             </p>
           </div>
+          {marker.uploadTimestamp && (
+            <div className="mt-4 bg-gradient-to-r from-blue-100 to-green-100 rounded-2xl p-4 border-2 border-white">
+              <p className="text-lg text-gray-600 flex items-center gap-2">
+                <span className="text-2xl">📅</span>
+                <strong>Reported:</strong>{" "}
+                {marker.uploadTimestamp &&
+                !isNaN(marker.uploadTimestamp.getTime())
+                  ? marker.uploadTimestamp.toLocaleString()
+                  : "Date unavailable"}
+                <span className="text-2xl">⏰</span>
+              </p>
+            </div>
+          )}
           <div className="mt-6 text-center">
             <p className="text-2xl">
               🌍 Let&apos;s make this spot sparkle clean! ✨

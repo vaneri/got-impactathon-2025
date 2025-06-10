@@ -1,11 +1,13 @@
 packages:
-  - "app"
+  - app
+  - api
 
 ignoredBuiltDependencies:
   - sharp
   - unrs-resolver
 
 onlyBuiltDependencies:
-  - "@tailwindcss/oxide"
-  - "app"
-  - "api"
+  - '@tailwindcss/oxide'
+  - api
+  - app
+  - esbuild

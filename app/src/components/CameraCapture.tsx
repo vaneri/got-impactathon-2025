@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useRef, useCallback } from "react";
-import Image from "next/image";
 import { MapMarker } from "../types/map";
+import { ApiService } from "../services/apiService";
 
 interface CameraCaptureProps {
   onNewMarker: (marker: MapMarker) => void;
@@ -94,32 +94,71 @@ export default function CameraCapture({
     }
   }, [stopCamera, getCurrentLocation]);
 
-  const saveTrashReport = useCallback(() => {
+  const saveTrashReport = useCallback(async () => {
     if (!capturedImage || !location) return;
 
-    // Mock storage - replace with actual API call later
-    const newMarker: MapMarker = {
-      id: `user-${Date.now()}`,
-      latitude: location.latitude,
-      longitude: location.longitude,
-      title: `New Trash Spot 🤢`,
-      description: `Reported by user at ${new Date().toLocaleString()}`,
-      imageUrl: capturedImage, // In real app, this would be uploaded to server
-      imageAlt: "User-reported trash location",
-    };
+    try {
+      // Upload image to API
+      const response = await ApiService.uploadBase64Image(
+        capturedImage,
+        location.latitude,
+        location.longitude,
+        `trash-report-${Date.now()}.png`
+      );
 
-    // Add to map
-    onNewMarker(newMarker);
+      // Parse the upload timestamp safely
+      let uploadDate: Date | undefined;
+      try {
+        if (response.image.uploadTimestamp) {
+          const timestamp =
+            typeof response.image.uploadTimestamp === "string"
+              ? response.image.uploadTimestamp
+              : response.image.uploadTimestamp.toString();
 
-    // Reset state
-    setCapturedImage(null);
-    setLocation(null);
-    onClose();
+          uploadDate = new Date(timestamp);
 
-    // Show success message
-    alert(
-      "🌟 Trash location reported! Thanks for helping make the world sparkle! ✨"
-    );
+          // Check if date is valid
+          if (isNaN(uploadDate.getTime())) {
+            console.warn("Invalid upload timestamp:", timestamp);
+            uploadDate = new Date(); // Use current date as fallback
+          }
+        } else {
+          uploadDate = new Date(); // Use current date if no timestamp
+        }
+      } catch (error) {
+        console.warn("Error parsing upload timestamp:", error);
+        uploadDate = new Date(); // Use current date as fallback
+      }
+
+      // Create marker from API response
+      const newMarker: MapMarker = {
+        id: response.image.id,
+        latitude: response.image.latitude!,
+        longitude: response.image.longitude!,
+        title: `Trash Report #${response.image.id} 🗑️`,
+        description: `Reported on ${uploadDate.toLocaleDateString()}`,
+        imageUrl: ApiService.getImageUrl(response.image.id),
+        imageAlt: `Trash report image ${response.image.originalFilename}`,
+        filename: response.image.filename,
+        uploadTimestamp: uploadDate,
+      };
+
+      // Add to map
+      onNewMarker(newMarker);
+
+      // Reset state
+      setCapturedImage(null);
+      setLocation(null);
+      onClose();
+
+      // Show success message
+      alert(
+        "🌟 Trash location reported and uploaded! Thanks for helping make the world sparkle! ✨"
+      );
+    } catch (error) {
+      console.error("Failed to upload image:", error);
+      alert("❌ Failed to upload image. Please try again.");
+    }
   }, [capturedImage, location, onNewMarker, onClose]);
 
   const handleCancel = useCallback(() => {
@@ -184,13 +223,12 @@ export default function CameraCapture({
 
         {capturedImage && (
           <div className="text-center">
-            <Image
+            {/* Use regular img tag for base64 data URLs */}
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
               src={capturedImage}
               alt="Captured trash"
               className="w-full rounded-2xl mb-4 border-2 border-white"
-              width={400}
-              height={300}
-              unoptimized
             />
 
             {isGettingLocation && (
