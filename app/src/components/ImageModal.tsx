@@ -90,7 +90,7 @@ export default function ImageModal({
           </div>
           <div className="mt-6 text-center">
             <p className="text-2xl">
-              🌍 Let's make this spot sparkle clean! ✨
+              🌍 Let&apos;s make this spot sparkle clean! ✨
             </p>
           </div>
         </div>

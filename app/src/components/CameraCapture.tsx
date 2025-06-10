@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useCallback } from "react";
+import Image from "next/image";
 import { MapMarker } from "../types/map";
 
 interface CameraCaptureProps {
@@ -48,25 +49,6 @@ export default function CameraCapture({
     setIsCapturing(false);
   }, []);
 
-  const capturePhoto = useCallback(() => {
-    if (videoRef.current && canvasRef.current) {
-      const canvas = canvasRef.current;
-      const video = videoRef.current;
-      const context = canvas.getContext("2d");
-
-      canvas.width = video.videoWidth;
-      canvas.height = video.videoHeight;
-
-      if (context) {
-        context.drawImage(video, 0, 0);
-        const imageDataUrl = canvas.toDataURL("image/png");
-        setCapturedImage(imageDataUrl);
-        stopCamera();
-        getCurrentLocation();
-      }
-    }
-  }, [stopCamera]);
-
   const getCurrentLocation = useCallback(() => {
     setIsGettingLocation(true);
 
@@ -92,6 +74,25 @@ export default function CameraCapture({
       { enableHighAccuracy: true, timeout: 10000, maximumAge: 60000 }
     );
   }, []);
+
+  const capturePhoto = useCallback(() => {
+    if (videoRef.current && canvasRef.current) {
+      const canvas = canvasRef.current;
+      const video = videoRef.current;
+      const context = canvas.getContext("2d");
+
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+
+      if (context) {
+        context.drawImage(video, 0, 0);
+        const imageDataUrl = canvas.toDataURL("image/png");
+        setCapturedImage(imageDataUrl);
+        stopCamera();
+        getCurrentLocation();
+      }
+    }
+  }, [stopCamera, getCurrentLocation]);
 
   const saveTrashReport = useCallback(() => {
     if (!capturedImage || !location) return;
@@ -138,8 +139,8 @@ export default function CameraCapture({
         {!isCapturing && !capturedImage && (
           <div className="text-center">
             <p className="text-gray-700 mb-6">
-              🌟 Help make the world sparkle by reporting trash! We'll capture a
-              photo and your location. ✨
+              🌟 Help make the world sparkle by reporting trash! We&apos;ll
+              capture a photo and your location. ✨
             </p>
             <button
               onClick={startCamera}
@@ -183,10 +184,13 @@ export default function CameraCapture({
 
         {capturedImage && (
           <div className="text-center">
-            <img
+            <Image
               src={capturedImage}
               alt="Captured trash"
               className="w-full rounded-2xl mb-4 border-2 border-white"
+              width={400}
+              height={300}
+              unoptimized
             />
 
             {isGettingLocation && (
