@@ -129,7 +129,8 @@ router.get("/:id/file", async (req, res) => {
     const image = await Image.findById(id);
 
     if (!image) {
-      return res.status(404).json({ error: "Image not found" });
+      res.status(404).json({ error: "Image not found" });
+      return;
     }
 
     res.set({
@@ -152,10 +153,11 @@ router.get("/:id", async (req: Request, res: Response) => {
     const image = await Image.findById(id);
 
     if (!image) {
-      return res.status(404).json({ error: "Image not found" });
+      res.status(404).json({ error: "Image not found" });
+      return;
     }
 
-    return res.json({
+    res.json({
       id: image.id,
       filename: image.filename,
       originalFilename: image.original_filename,
@@ -167,7 +169,7 @@ router.get("/:id", async (req: Request, res: Response) => {
     });
   } catch (error) {
     console.error("Get image error:", error);
-    return res.status(500).json({ error: "Failed to retrieve image" });
+    res.status(500).json({ error: "Failed to retrieve image" });
   }
 });
 
@@ -178,13 +180,13 @@ router.delete("/:id", async (req, res) => {
     const result = await Image.delete(id);
 
     if (result.affectedRows === 0) {
-      return res.status(404).json({ error: "Image not found" });
+      res.status(404).json({ error: "Image not found" });
     }
 
-    return res.json({ message: "Image deleted successfully" });
+    res.json({ message: "Image deleted successfully" });
   } catch (error) {
     console.error("Delete image error:", error);
-    return res.status(500).json({ error: "Failed to delete image" });
+    res.status(500).json({ error: "Failed to delete image" });
   }
 });
 
