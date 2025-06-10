@@ -104,6 +104,39 @@ export class ApiService {
   }
 
   /**
+   * Get user's current location
+   */
+  private static getUserLocation(): Promise<{
+    latitude: number;
+    longitude: number;
+  }> {
+    return new Promise((resolve, reject) => {
+      if (!navigator.geolocation) {
+        reject(new Error("Geolocation is not supported by this browser"));
+        return;
+      }
+
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          resolve({
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+          });
+        },
+        (error) => {
+          console.warn("Failed to get user location:", error);
+          reject(error);
+        },
+        {
+          enableHighAccuracy: false, // Use network-based location for speed
+          timeout: 5000, // 5 second timeout
+          maximumAge: 300000, // 5 minutes cache
+        }
+      );
+    });
+  }
+
+  /**
    * Group markers that are very close to each other and apply slight offsets
    */
   private static groupAndOffsetMarkers(markers: MapMarker[]): MapMarker[] {
@@ -253,36 +286,77 @@ export class ApiService {
       // Group and offset markers that are too close to each other
       const processedMarkers = this.groupAndOffsetMarkers(markers);
 
-      // Calculate center from available markers or use default
+      // Try to center on user's location first, with fallbacks
       let center = {
         latitude: 40.7128, // Default to NYC
         longitude: -74.006,
       };
+      let locationStatus: "user" | "markers" | "default" = "default";
 
-      if (processedMarkers.length > 0) {
-        const avgLat =
-          processedMarkers.reduce((sum, marker) => sum + marker.latitude, 0) /
-          processedMarkers.length;
-        const avgLng =
-          processedMarkers.reduce((sum, marker) => sum + marker.longitude, 0) /
-          processedMarkers.length;
+      try {
+        // First priority: User's current location
+        const userLocation = await this.getUserLocation();
+        center = userLocation;
+        locationStatus = "user";
+        console.log("Map centered on user location:", center);
+      } catch {
+        console.log(
+          "Could not get user location, falling back to marker-based centering"
+        );
 
-        // Validate calculated center
-        if (!isNaN(avgLat) && !isNaN(avgLng)) {
-          center = {
-            latitude: avgLat,
-            longitude: avgLng,
-          };
+        // Second priority: Average of all markers
+        if (processedMarkers.length > 0) {
+          const avgLat =
+            processedMarkers.reduce((sum, marker) => sum + marker.latitude, 0) /
+            processedMarkers.length;
+          const avgLng =
+            processedMarkers.reduce(
+              (sum, marker) => sum + marker.longitude,
+              0
+            ) / processedMarkers.length;
+
+          // Validate calculated center
+          if (!isNaN(avgLat) && !isNaN(avgLng)) {
+            center = {
+              latitude: avgLat,
+              longitude: avgLng,
+            };
+            locationStatus = "markers";
+            console.log("Map centered on marker average:", center);
+          }
+        } else {
+          locationStatus = "default";
+          console.log(
+            "No markers available, using default center (NYC):",
+            center
+          );
         }
       }
 
       console.log("Final map center:", center);
       console.log("Final processed markers:", processedMarkers);
 
+      // Set zoom level based on how the center was determined
+      let zoom: number;
+      switch (locationStatus) {
+        case "user":
+          zoom = 15; // Close zoom for user location to see immediate area
+          break;
+        case "markers":
+          zoom = 12; // Medium zoom to see all markers in the area
+          break;
+        case "default":
+          zoom = 10; // Wide zoom for default location
+          break;
+        default:
+          zoom = processedMarkers.length > 0 ? 12 : 10;
+      }
+
       return {
         center,
-        zoom: processedMarkers.length > 0 ? 12 : 10,
+        zoom,
         markers: processedMarkers,
+        locationStatus,
       };
     } catch (error) {
       console.error("Failed to load map data from API:", error);
@@ -293,8 +367,9 @@ export class ApiService {
           latitude: 40.7128,
           longitude: -74.006,
         },
-        zoom: 12,
+        zoom: 10, // Wide zoom for fallback default location
         markers: [],
+        locationStatus: "default",
       };
     }
   }

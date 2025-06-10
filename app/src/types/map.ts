@@ -18,6 +18,7 @@ export interface MapData {
   };
   zoom: number;
   markers: MapMarker[];
+  locationStatus?: "user" | "markers" | "default";
 }
 
 // API Types

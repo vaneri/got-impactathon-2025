@@ -14,23 +14,31 @@ export default function Home() {
   const [isCameraOpen, setIsCameraOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [locationStatus, setLocationStatus] = useState<
+    "checking" | "user" | "markers" | "default" | "unavailable"
+  >("checking");
 
   useEffect(() => {
     const loadMapData = async () => {
       try {
         setError(null);
+        setLocationStatus("checking");
+
         // First check if API is healthy
         await ApiService.healthCheck();
 
-        // Load map data from API
+        // Load map data from API (this will now try to center on user location)
         const data = await ApiService.getMapData();
-        console.log("Map data loaded:", data);
         setMapData(data);
+
+        // Use the location status from the API response
+        setLocationStatus(data.locationStatus || "default");
       } catch (error) {
         console.error("Failed to load map data:", error);
         setError(
           error instanceof Error ? error.message : "Failed to load data"
         );
+        setLocationStatus("unavailable");
       } finally {
         setLoading(false);
       }
@@ -123,6 +131,54 @@ export default function Home() {
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Location Status Info */}
+        {locationStatus === "checking" && (
+          <div className="mb-4 p-4 bg-blue-100 border-l-4 border-blue-500 rounded-lg">
+            <div className="flex items-center">
+              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-500 mr-3"></div>
+              <p className="text-blue-700">
+                📍 Getting your location to center the map...
+              </p>
+            </div>
+          </div>
+        )}
+
+        {locationStatus === "user" && (
+          <div className="mb-4 p-4 bg-green-100 border-l-4 border-green-500 rounded-lg">
+            <p className="text-green-700">
+              ✅ Map centered on your location! You can now see trash reports
+              around you.
+            </p>
+          </div>
+        )}
+
+        {locationStatus === "markers" && (
+          <div className="mb-4 p-4 bg-blue-100 border-l-4 border-blue-500 rounded-lg">
+            <p className="text-blue-700">
+              📍 Location access denied. Map centered on existing trash reports.
+            </p>
+          </div>
+        )}
+
+        {locationStatus === "default" && (
+          <div className="mb-4 p-4 bg-yellow-100 border-l-4 border-yellow-500 rounded-lg">
+            <p className="text-yellow-700">
+              📍 Location access denied and no reports available. Map centered
+              on default location. For better experience, allow location access
+              and refresh the page.
+            </p>
+          </div>
+        )}
+
+        {locationStatus === "unavailable" && (
+          <div className="mb-4 p-4 bg-red-100 border-l-4 border-red-500 rounded-lg">
+            <p className="text-red-700">
+              ❌ Unable to determine location. Please check your connection and
+              try again.
+            </p>
+          </div>
+        )}
+
         {/* Map Section */}
         <div className="ice-cream-bg rounded-3xl shadow-2xl p-8 mb-8 sparkle border-4 border-white relative">
           <h2 className="text-3xl font-bold text-gray-800 mb-6 text-center">
