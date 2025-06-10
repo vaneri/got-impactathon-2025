@@ -112,17 +112,21 @@ export default function Home() {
             🗺️ Explore Sweet Cleanup Spots! 🍦 ({mapData.markers.length} magical
             markers)
           </h2>
-          <div className="rounded-2xl overflow-hidden border-4 border-white shadow-xl">
+          <div className="rounded-2xl overflow-hidden border-4 border-white shadow-xl relative">
             <InteractiveMap
               mapData={mapData}
               onMarkerClick={handleMarkerClick}
             />
           </div>
 
-          {/* Floating Action Button for Camera */}
+          {/* Floating Action Button for Camera - positioned inside map container */}
           <button
             onClick={handleOpenCamera}
-            className="absolute bottom-6 right-6 w-16 h-16 lollipop-btn rounded-full shadow-2xl hover:scale-110 transition-all duration-300 flex items-center justify-center sparkle"
+            className="absolute bottom-4 right-4 w-16 h-16 lollipop-btn rounded-full shadow-2xl hover:scale-110 transition-all duration-300 flex items-center justify-center sparkle"
+            style={{
+              zIndex: 10000,
+              pointerEvents: "auto",
+            }}
             title="Report new trash location"
           >
             <span className="text-2xl">📸</span>
