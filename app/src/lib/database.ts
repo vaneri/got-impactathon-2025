@@ -7,7 +7,7 @@ const dbConfig: PoolConfig = {
 };
 
 // Configure SSL for Supabase and other cloud providers
-if (dbConfig.connectionString) {
+/* if (dbConfig.connectionString) {
   const isLocal = dbConfig.connectionString.includes("localhost") || 
                   dbConfig.connectionString.includes("127.0.0.1");
   
@@ -22,7 +22,7 @@ if (dbConfig.connectionString) {
     };
     console.log("🔒 SSL configured for remote database connection");
   }
-}
+} */
 
 dbConfig.connectionTimeoutMillis = 10000; // Increased for remote connections
 dbConfig.idleTimeoutMillis = 30000;
@@ -38,7 +38,13 @@ class Database {
       // Test the connection with retry logic for remote databases
       const client = await this.pool.connect();
       console.log("✅ Database connected successfully");
-      console.log(`🌐 Connected to: ${dbConfig.connectionString?.includes('supabase.com') ? 'Supabase' : 'PostgreSQL'}`);
+      console.log(
+        `🌐 Connected to: ${
+          dbConfig.connectionString?.includes("supabase.com")
+            ? "Supabase"
+            : "PostgreSQL"
+        }`
+      );
       client.release();
 
       return this.pool;
@@ -48,15 +54,20 @@ class Database {
         ssl: dbConfig.ssl,
         connectionTimeoutMillis: dbConfig.connectionTimeoutMillis,
         max: dbConfig.max,
-        isSupabase: dbConfig.connectionString?.includes('supabase.com') || false
+        isSupabase:
+          dbConfig.connectionString?.includes("supabase.com") || false,
       });
-      
+
       // Provide specific help for common SSL issues
-      if ((error as Error).message.includes('certificate')) {
-        console.error("💡 SSL Certificate Issue - this is common with cloud databases");
-        console.error("   Try setting NODE_TLS_REJECT_UNAUTHORIZED=0 in your environment");
+      if ((error as Error).message.includes("certificate")) {
+        console.error(
+          "💡 SSL Certificate Issue - this is common with cloud databases"
+        );
+        console.error(
+          "   Try setting NODE_TLS_REJECT_UNAUTHORIZED=0 in your environment"
+        );
       }
-      
+
       throw error;
     }
   }
