@@ -71,13 +71,41 @@ export default function InteractiveMap({
   }
 
   // Create custom emoji icon
-  const createEmojiIcon = () => {
+  const createEmojiIcon = (marker: MapMarker) => {
+    // Determine if this is a grouped marker or individual marker
+    const isGrouped =
+      marker.title.includes("reports at this location") ||
+      marker.title.includes("/");
+    const isMultiple = marker.title.includes("(") && marker.title.includes("/");
+
+    let iconHtml = "";
+    let iconSize: [number, number] = [40, 40];
+
+    if (isGrouped && !isMultiple) {
+      // This is a main grouped marker representing multiple images
+      iconHtml =
+        '<div style="font-size: 28px; text-align: center; line-height: 1; filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.5)); background: rgba(255,255,255,0.9); border-radius: 50%; padding: 6px; border: 2px solid #e74c3c;">🗑️📊</div>';
+      iconSize = [50, 50];
+    } else if (isMultiple) {
+      // This is one of the offset individual markers
+      const markerNumber = marker.title.match(/\((\d+)\/\d+\)/)?.[1] || "1";
+      iconHtml = `<div style="font-size: 24px; text-align: center; line-height: 1; filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.5)); background: rgba(255,255,255,0.8); border-radius: 50%; padding: 4px; border: 1px solid #3498db; position: relative;">
+        🤢
+        <div style="position: absolute; top: -8px; right: -8px; background: #3498db; color: white; border-radius: 50%; width: 18px; height: 18px; font-size: 12px; display: flex; align-items: center; justify-content: center; font-weight: bold;">${markerNumber}</div>
+      </div>`;
+      iconSize = [44, 44];
+    } else {
+      // Regular single marker
+      iconHtml =
+        '<div style="font-size: 32px; text-align: center; line-height: 1; filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.3));">🤢</div>';
+    }
+
     return L.divIcon({
-      html: '<div style="font-size: 32px; text-align: center; line-height: 1; filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.3));">🤢</div>',
+      html: iconHtml,
       className: "custom-emoji-icon",
-      iconSize: [40, 40],
-      iconAnchor: [20, 40],
-      popupAnchor: [0, -40],
+      iconSize: iconSize,
+      iconAnchor: [iconSize[0] / 2, iconSize[1]],
+      popupAnchor: [0, -iconSize[1]],
     });
   };
 
@@ -102,7 +130,7 @@ export default function InteractiveMap({
             <Marker
               key={marker.id}
               position={[marker.latitude, marker.longitude]}
-              icon={createEmojiIcon()}
+              icon={createEmojiIcon(marker)}
               eventHandlers={{
                 click: () => onMarkerClick(marker),
                 mouseover: (e) => {
@@ -116,9 +144,25 @@ export default function InteractiveMap({
               <Popup closeButton={false} autoClose={false} closeOnClick={false}>
                 <div className="text-center p-2">
                   <h3 className="font-bold text-xl mb-2 text-gray-800 flex items-center justify-center gap-2">
-                    <span className="text-lg">🤢</span>
-                    {marker.title}
-                    <span className="text-lg">✨</span>
+                    {marker.title.includes("reports at this location") ? (
+                      <>
+                        <span className="text-lg">🗑️</span>
+                        {marker.title}
+                        <span className="text-lg">📊</span>
+                      </>
+                    ) : marker.title.includes("/") ? (
+                      <>
+                        <span className="text-lg">🤢</span>
+                        {marker.title}
+                        <span className="text-lg">✨</span>
+                      </>
+                    ) : (
+                      <>
+                        <span className="text-lg">🤢</span>
+                        {marker.title}
+                        <span className="text-lg">✨</span>
+                      </>
+                    )}
                   </h3>
                   {marker.description && (
                     <p className="text-sm text-gray-600 mb-3">
@@ -126,7 +170,9 @@ export default function InteractiveMap({
                     </p>
                   )}
                   <p className="text-xs text-gray-500 italic">
-                    Click marker to view image! 📸
+                    {marker.title.includes("reports at this location")
+                      ? "Click to view all images at this location! 📸📸"
+                      : "Click marker to view image! 📸"}
                   </p>
                 </div>
               </Popup>

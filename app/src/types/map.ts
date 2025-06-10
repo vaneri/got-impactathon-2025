@@ -8,6 +8,7 @@ export interface MapMarker {
   imageAlt: string;
   filename?: string;
   uploadTimestamp?: Date;
+  groupedMarkers?: MapMarker[]; // For markers that represent multiple images at the same location
 }
 
 export interface MapData {

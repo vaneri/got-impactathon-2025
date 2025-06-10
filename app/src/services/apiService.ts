@@ -104,6 +104,81 @@ export class ApiService {
   }
 
   /**
+   * Group markers that are very close to each other and apply slight offsets
+   */
+  private static groupAndOffsetMarkers(markers: MapMarker[]): MapMarker[] {
+    const PROXIMITY_THRESHOLD = 0.0001; // ~10 meters
+    const OFFSET_AMOUNT = 0.0002; // Small offset to separate markers
+
+    const processedMarkers: MapMarker[] = [];
+    const processed = new Set<number>();
+
+    markers.forEach((marker, index) => {
+      if (processed.has(index)) return;
+
+      // Find all markers within proximity threshold
+      const nearbyMarkers = markers.filter((otherMarker, otherIndex) => {
+        if (index === otherIndex || processed.has(otherIndex)) return false;
+
+        const distance = Math.sqrt(
+          Math.pow(marker.latitude - otherMarker.latitude, 2) +
+            Math.pow(marker.longitude - otherMarker.longitude, 2)
+        );
+
+        return distance <= PROXIMITY_THRESHOLD;
+      });
+
+      if (nearbyMarkers.length === 0) {
+        // Single marker at this location
+        processedMarkers.push(marker);
+        processed.add(index);
+      } else {
+        // Multiple markers at similar location - offset them in a circle pattern
+        const allMarkersAtLocation = [marker, ...nearbyMarkers];
+
+        allMarkersAtLocation.forEach((markerToOffset, offsetIndex) => {
+          if (offsetIndex === 0) {
+            // Keep the first marker at original position but update title
+            processedMarkers.push({
+              ...markerToOffset,
+              title: `${markerToOffset.title} (1/${allMarkersAtLocation.length})`,
+              description: `${markerToOffset.description} - Part of ${allMarkersAtLocation.length} reports at this location.`,
+            });
+          } else {
+            // Offset other markers in a circle pattern
+            const angle =
+              ((offsetIndex - 1) * 2 * Math.PI) /
+              (allMarkersAtLocation.length - 1);
+            const offsetLat = Math.cos(angle) * OFFSET_AMOUNT;
+            const offsetLng = Math.sin(angle) * OFFSET_AMOUNT;
+
+            processedMarkers.push({
+              ...markerToOffset,
+              latitude: markerToOffset.latitude + offsetLat,
+              longitude: markerToOffset.longitude + offsetLng,
+              title: `${markerToOffset.title} (${offsetIndex + 1}/${
+                allMarkersAtLocation.length
+              })`,
+              description: `${markerToOffset.description} - Part of ${allMarkersAtLocation.length} reports at this location.`,
+            });
+          }
+        });
+
+        // Mark all as processed
+        processed.add(index);
+        nearbyMarkers.forEach((_, nearbyIndex) => {
+          const originalIndex = markers.findIndex(
+            (m) => m === nearbyMarkers[nearbyIndex]
+          );
+          processed.add(originalIndex);
+        });
+      }
+    });
+
+    return processedMarkers;
+  }
+
+  /**
    * Convert API images to map markers
    */
   static async getMapData(): Promise<MapData> {
@@ -175,19 +250,22 @@ export class ApiService {
         };
       });
 
+      // Group and offset markers that are too close to each other
+      const processedMarkers = this.groupAndOffsetMarkers(markers);
+
       // Calculate center from available markers or use default
       let center = {
         latitude: 40.7128, // Default to NYC
         longitude: -74.006,
       };
 
-      if (markers.length > 0) {
+      if (processedMarkers.length > 0) {
         const avgLat =
-          markers.reduce((sum, marker) => sum + marker.latitude, 0) /
-          markers.length;
+          processedMarkers.reduce((sum, marker) => sum + marker.latitude, 0) /
+          processedMarkers.length;
         const avgLng =
-          markers.reduce((sum, marker) => sum + marker.longitude, 0) /
-          markers.length;
+          processedMarkers.reduce((sum, marker) => sum + marker.longitude, 0) /
+          processedMarkers.length;
 
         // Validate calculated center
         if (!isNaN(avgLat) && !isNaN(avgLng)) {
@@ -199,12 +277,12 @@ export class ApiService {
       }
 
       console.log("Final map center:", center);
-      console.log("Final markers:", markers);
+      console.log("Final processed markers:", processedMarkers);
 
       return {
         center,
-        zoom: markers.length > 0 ? 12 : 10,
-        markers,
+        zoom: processedMarkers.length > 0 ? 12 : 10,
+        markers: processedMarkers,
       };
     } catch (error) {
       console.error("Failed to load map data from API:", error);
