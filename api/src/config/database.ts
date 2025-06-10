@@ -1,43 +1,35 @@
-import mysql from "mysql2/promise";
+import { Pool, PoolConfig } from "pg";
 
-interface DatabaseConfig {
-  host: string;
-  port: number;
-  user: string;
-  password: string;
-  database: string;
-  charset: string;
-  timezone: string;
-  connectionLimit: number;
-  acquireTimeout: number;
-  timeout: number;
-  reconnect: boolean;
-}
-const dbConfig: DatabaseConfig = {
-  host: process.env.DB_HOST ?? "localhost",
-  port: Number(process.env.DB_PORT ?? 3306),
-  user: process.env.DB_USER ?? "geotag_user",
-  password: process.env.DB_PASSWORD ?? "geotag_password",
-  database: process.env.DB_NAME ?? "geotag_images",
-  charset: "utf8mb4",
-  timezone: "+00:00",
-  connectionLimit: 10,
-  acquireTimeout: 60000,
-  timeout: 60000,
-  reconnect: true,
+const dbConfig: PoolConfig = {
+  connectionString: process.env.POSTGRES_URL
+    ? process.env.POSTGRES_URL
+    : "postgresql://geotag_user:geotag_password@localhost:5555/geotag_images",
 };
 
-class Database {
-  private pool: mysql.Pool | null = null;
+// For Supabase or other remote databases, SSL is often required.
+// We avoid enforcing it for local connections to prevent issues.
+if (
+  dbConfig.connectionString &&
+  !dbConfig.connectionString.includes("localhost")
+) {
+  dbConfig.ssl = { rejectUnauthorized: false };
+}
 
-  async connect(): Promise<mysql.Pool> {
+dbConfig.connectionTimeoutMillis = 5000;
+dbConfig.idleTimeoutMillis = 10000;
+dbConfig.max = 10;
+
+class Database {
+  private pool: Pool | null = null;
+
+  async connect(): Promise<Pool> {
     try {
-      this.pool = mysql.createPool(dbConfig);
+      this.pool = new Pool(dbConfig);
 
       // Test the connection
-      const connection = await this.pool.getConnection();
+      const client = await this.pool.connect();
       console.log("✅ Database connected successfully");
-      connection.release();
+      client.release();
 
       return this.pool;
     } catch (error) {
@@ -52,8 +44,8 @@ class Database {
     }
 
     try {
-      const [results] = await this.pool.execute(sql, params);
-      return results;
+      const result = await this.pool.query(sql, params);
+      return result.rows;
     } catch (error) {
       console.error("Database query error:", error);
       throw error;

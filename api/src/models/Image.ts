@@ -38,54 +38,31 @@ export class Image {
 
   // Save image to database
   async save(): Promise<Image> {
-    // Validate numeric parameters
-    const fileSize = parseInt(this.fileSize.toString(), 10);
-    if (isNaN(fileSize)) {
-      throw new Error("Invalid file size");
-    }
-
-    let latValue = 'NULL';
-    let lngValue = 'NULL';
-    
-    if (this.latitude != null) {
-      const lat = parseFloat(this.latitude.toString());
-      if (!isNaN(lat)) {
-        latValue = lat.toString();
-      }
-    }
-    
-    if (this.longitude != null) {
-      const lng = parseFloat(this.longitude.toString());
-      if (!isNaN(lng)) {
-        lngValue = lng.toString();
-      }
-    }
-
     const sql = `
-            INSERT INTO images (filename, original_filename, mime_type, file_size, image_data, latitude, longitude)
-            VALUES (?, ?, ?, ${fileSize}, ?, ${latValue}, ${lngValue})
-        `;
+        INSERT INTO images (filename, original_filename, mime_type, file_size, image_data, latitude, longitude)
+        VALUES ($1, $2, $3, $4, $5, $6, $7)
+        RETURNING id
+    `;
 
     const params = [
-      this.filename,
-      this.originalFilename,
-      this.mimeType,
-      this.imageData,
+        this.filename,
+        this.originalFilename,
+        this.mimeType,
+        this.fileSize,
+        this.imageData,
+        this.latitude || null,
+        this.longitude || null,
     ];
 
     const result = await database.query(sql, params);
-    this.id = result.insertId;
+    this.id = result[0].id;
     return this;
   }
 
   // Find image by ID
   static async findById(id: number): Promise<ImageRow | null> {
-    const idInt = parseInt(id.toString(), 10);
-    if (isNaN(idInt)) {
-      return null;
-    }
-    const sql = `SELECT * FROM images WHERE id = ${idInt}`;
-    const results = await database.query(sql);
+    const sql = `SELECT * FROM images WHERE id = $1`;
+    const results = await database.query(sql, [id]);
     return results.length > 0 ? results[0] : null;
   }
 
@@ -93,27 +70,17 @@ export class Image {
   static async findByBounds(bounds: HeatmapBounds): Promise<ImageRow[]> {
     const { north, south, east, west } = bounds;
 
-    // Validate and sanitize numeric bounds
-    const southNum = parseFloat(south.toString());
-    const northNum = parseFloat(north.toString());
-    const westNum = parseFloat(west.toString());
-    const eastNum = parseFloat(east.toString());
-
-    if (isNaN(southNum) || isNaN(northNum) || isNaN(westNum) || isNaN(eastNum)) {
-      throw new Error("Invalid bounds parameters");
-    }
-
     const sql = `
-            SELECT id, filename, original_filename, latitude, longitude, upload_timestamp
-            FROM images
-            WHERE latitude BETWEEN ${southNum} AND ${northNum}
-              AND longitude BETWEEN ${westNum} AND ${eastNum}
-              AND latitude IS NOT NULL
-              AND longitude IS NOT NULL
-            ORDER BY upload_timestamp DESC
-        `;
+        SELECT id, filename, original_filename, latitude, longitude, upload_timestamp
+        FROM images
+        WHERE latitude BETWEEN $1 AND $2
+          AND longitude BETWEEN $3 AND $4
+          AND latitude IS NOT NULL
+          AND longitude IS NOT NULL
+        ORDER BY upload_timestamp DESC
+    `;
 
-    return await database.query(sql);
+    return await database.query(sql, [south, north, west, east]);
   }
 
   // Get all images with coordinates (for heatmap)
@@ -133,29 +100,18 @@ export class Image {
     limit: number = 100,
     offset: number = 0
   ): Promise<ImageRow[]> {
-    // Ensure parameters are integers
-    const limitInt = parseInt(limit.toString(), 10);
-    const offsetInt = parseInt(offset.toString(), 10);
-    
     const sql = `
-            SELECT * FROM images
-            ORDER BY upload_timestamp DESC
-            LIMIT ${limitInt} OFFSET ${offsetInt}
-        `;
-    console.log(
-      `Executing SQL: ${sql} with limit ${limitInt} and offset ${offsetInt}`
-    );
-    return await database.query(sql);
+        SELECT * FROM images
+        ORDER BY upload_timestamp DESC
+        LIMIT $1 OFFSET $2
+    `;
+    return await database.query(sql, [limit, offset]);
   }
 
   // Delete image
   static async delete(id: number): Promise<any> {
-    const idInt = parseInt(id.toString(), 10);
-    if (isNaN(idInt)) {
-      throw new Error("Invalid ID parameter");
-    }
-    const sql = `DELETE FROM images WHERE id = ${idInt}`;
-    return await database.query(sql);
+    const sql = `DELETE FROM images WHERE id = $1`;
+    return await database.query(sql, [id]);
   }
 
   // Get basic statistics
@@ -163,7 +119,7 @@ export class Image {
     const statsQueries = [
       `SELECT COUNT(*) as total_images FROM images`,
       `SELECT COUNT(*) as images_with_coordinates FROM images WHERE latitude IS NOT NULL AND longitude IS NOT NULL`,
-      `SELECT AVG(file_size) as avg_file_size FROM images`,
+      `SELECT CAST(AVG(file_size) as BIGINT) as avg_file_size FROM images`,
     ];
 
     const results = await Promise.all(
@@ -173,7 +129,7 @@ export class Image {
     return {
       totalImages: results[0][0].total_images,
       imagesWithCoordinates: results[1][0].images_with_coordinates,
-      avgFileSize: Math.round(results[2][0].avg_file_size || 0),
+      avgFileSize: results[2][0].avg_file_size || 0,
     };
   }
 }

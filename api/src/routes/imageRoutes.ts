@@ -18,7 +18,7 @@ const upload = multer({
 });
 
 // Upload image with coordinates
-router.post("/upload", upload.single("image"), async (req, res) => {
+router.post("/upload", upload.single("image"), async (req: Request, res: Response) => {
   try {
     if (!req.file) {
       res.status(400).json({ error: "No image file provided" });
@@ -73,7 +73,6 @@ router.post("/upload", upload.single("image"), async (req, res) => {
   } catch (error) {
     console.error("Upload error:", error);
     res.status(500).json({ error: "Failed to upload image" });
-    return;
   }
 });
 
@@ -123,7 +122,7 @@ router.get("/stats/summary", async (req: Request, res: Response) => {
 });
 
 // Get image file data
-router.get("/:id/file", async (req, res) => {
+router.get("/:id/file", async (req: Request, res: Response) => {
   try {
     const id = parseInt(req.params.id);
     const image = await Image.findById(id);
@@ -174,7 +173,7 @@ router.get("/:id", async (req: Request, res: Response) => {
 });
 
 // Delete image
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", async (req: Request, res: Response) => {
   try {
     const id = parseInt(req.params.id);
     const result = await Image.delete(id);

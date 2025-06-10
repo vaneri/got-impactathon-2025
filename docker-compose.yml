@@ -1,40 +1,24 @@
 version: "3.8"
 
 services:
-  mysql:
-    image: mysql:8.0
-    container_name: trash_network
+  postgres:
+    image: postgres:16-alpine
+    container_name: geotag_postgres
     restart: unless-stopped
     environment:
-      MYSQL_ROOT_PASSWORD: rootpassword
-      MYSQL_DATABASE: geotag_images
-      MYSQL_USER: geotag_user
-      MYSQL_PASSWORD: geotag_password
+      POSTGRES_DB: geotag_images
+      POSTGRES_USER: geotag_user
+      POSTGRES_PASSWORD: geotag_password
     ports:
-      - "3306:3306"
+      - "5555:5432"
     volumes:
-      - mysql_data:/var/lib/mysql
+      - postgres_data:/var/lib/postgresql/data
       - ./database/init:/docker-entrypoint-initdb.d
     networks:
       - trash_network
 
-  phpmyadmin:
-    image: phpmyadmin/phpmyadmin
-    container_name: geotag_phpmyadmin
-    restart: unless-stopped
-    environment:
-      PMA_HOST: mysql
-      PMA_PORT: 3306
-      MYSQL_ROOT_PASSWORD: rootpassword
-    ports:
-      - "8080:80"
-    depends_on:
-      - mysql
-    networks:
-      - trash_network
-
 volumes:
-  mysql_data:
+  postgres_data:
 
 networks:
   trash_network:
