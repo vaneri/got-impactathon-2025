@@ -6,13 +6,23 @@ const dbConfig: PoolConfig = {
     : "postgresql://geotag_user:geotag_password@localhost:5555/geotag_images",
 };
 
-// For Supabase or other remote databases, SSL is often required.
-// We avoid enforcing it for local connections to prevent issues.
+// For remote databases (Supabase, etc.), SSL is required but may use self-signed certificates
+// We need to allow unauthorized certificates to avoid connection errors
 if (
   dbConfig.connectionString &&
-  !dbConfig.connectionString.includes("localhost")
+  !dbConfig.connectionString.includes("localhost") &&
+  !dbConfig.connectionString.includes("127.0.0.1")
 ) {
-  dbConfig.ssl = { rejectUnauthorized: false };
+  dbConfig.ssl = { 
+    rejectUnauthorized: false,
+    // Allow self-signed certificates
+    ca: false
+  };
+} else if (dbConfig.connectionString && dbConfig.connectionString.includes("sslmode=require")) {
+  // If sslmode=require is in the connection string, ensure SSL is configured
+  dbConfig.ssl = { 
+    rejectUnauthorized: false 
+  };
 }
 
 dbConfig.connectionTimeoutMillis = 5000;
@@ -34,6 +44,11 @@ class Database {
       return this.pool;
     } catch (error) {
       console.error("❌ Database connection failed:", (error as Error).message);
+      console.error("Database config (connection string hidden):", {
+        ssl: dbConfig.ssl,
+        connectionTimeoutMillis: dbConfig.connectionTimeoutMillis,
+        max: dbConfig.max
+      });
       throw error;
     }
   }
