@@ -1,41 +1,48 @@
 version: "3.8"
 
 services:
-  mysql:
-    image: mysql:8.0
-    container_name: trash_network
+  postgres:
+    image: postgres:16-alpine
+    container_name: gothenburg_postgres
     restart: unless-stopped
     environment:
-      MYSQL_ROOT_PASSWORD: rootpassword
-      MYSQL_DATABASE: geotag_images
-      MYSQL_USER: geotag_user
-      MYSQL_PASSWORD: geotag_password
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_DB: geotag_images
     ports:
-      - "3306:3306"
+      - "5432:5432"
     volumes:
-      - mysql_data:/var/lib/mysql
+      - postgres_data:/var/lib/postgresql/data
       - ./database/init:/docker-entrypoint-initdb.d
     networks:
-      - trash_network
+      - gothenburg_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
-  phpmyadmin:
-    image: phpmyadmin/phpmyadmin
-    container_name: geotag_phpmyadmin
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: gothenburg_pgadmin
     restart: unless-stopped
     environment:
-      PMA_HOST: mysql
-      PMA_PORT: 3306
-      MYSQL_ROOT_PASSWORD: rootpassword
+      PGADMIN_DEFAULT_EMAIL: admin@gothenburg.se
+      PGADMIN_DEFAULT_PASSWORD: admin
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
     ports:
       - "8080:80"
     depends_on:
-      - mysql
+      - postgres
     networks:
-      - trash_network
+      - gothenburg_network
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
 
 volumes:
-  mysql_data:
+  postgres_data:
+  pgadmin_data:
 
 networks:
-  trash_network:
+  gothenburg_network:
     driver: bridge

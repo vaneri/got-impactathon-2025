@@ -1,43 +1,38 @@
-import mysql from "mysql2/promise";
+import { Pool, PoolConfig, QueryResult } from "pg";
 
-interface DatabaseConfig {
+interface DatabaseConfig extends PoolConfig {
   host: string;
   port: number;
   user: string;
   password: string;
   database: string;
-  charset: string;
-  timezone: string;
-  connectionLimit: number;
-  acquireTimeout: number;
-  timeout: number;
-  reconnect: boolean;
+  max: number;
+  idleTimeoutMillis: number;
+  connectionTimeoutMillis: number;
 }
+
 const dbConfig: DatabaseConfig = {
   host: process.env.DB_HOST ?? "localhost",
-  port: Number(process.env.DB_PORT ?? 3306),
-  user: process.env.DB_USER ?? "geotag_user",
-  password: process.env.DB_PASSWORD ?? "geotag_password",
+  port: Number(process.env.DB_PORT ?? 5432),
+  user: process.env.DB_USER ?? "postgres",
+  password: process.env.DB_PASSWORD ?? "postgres",
   database: process.env.DB_NAME ?? "geotag_images",
-  charset: "utf8mb4",
-  timezone: "+00:00",
-  connectionLimit: 10,
-  acquireTimeout: 60000,
-  timeout: 60000,
-  reconnect: true,
+  max: 10, // Maximum number of clients in the pool
+  idleTimeoutMillis: 30000, // Close idle clients after 30 seconds
+  connectionTimeoutMillis: 60000, // Return an error after 60 seconds if connection cannot be established
 };
 
 class Database {
-  private pool: mysql.Pool | null = null;
+  private pool: Pool | null = null;
 
-  async connect(): Promise<mysql.Pool> {
+  async connect(): Promise<Pool> {
     try {
-      this.pool = mysql.createPool(dbConfig);
+      this.pool = new Pool(dbConfig);
 
       // Test the connection
-      const connection = await this.pool.getConnection();
-      console.log("✅ Database connected successfully");
-      connection.release();
+      const client = await this.pool.connect();
+      console.log("✅ PostgreSQL Database connected successfully");
+      client.release();
 
       return this.pool;
     } catch (error) {
@@ -52,8 +47,23 @@ class Database {
     }
 
     try {
-      const [results] = await this.pool.execute(sql, params);
-      return results;
+      // Convert MySQL-style placeholders (?) to PostgreSQL-style ($1, $2, etc.)
+      let paramIndex = 1;
+      const pgSql = sql.replace(/\?/g, () => `$${paramIndex++}`);
+
+      const result: QueryResult = await this.pool.query(pgSql, params);
+      
+      // For INSERT queries, return an object with insertId (PostgreSQL uses RETURNING)
+      if (sql.trim().toUpperCase().startsWith("INSERT")) {
+        return {
+          insertId: result.rows[0]?.id || null,
+          rowCount: result.rowCount,
+          rows: result.rows,
+        };
+      }
+      
+      // For SELECT queries, return rows array
+      return result.rows;
     } catch (error) {
       console.error("Database query error:", error);
       throw error;

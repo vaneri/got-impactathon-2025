@@ -78,6 +78,7 @@ export class Image {
     const sql = `
             INSERT INTO images (filename, original_filename, mime_type, file_size, image_data, latitude, longitude, category_id, description)
             VALUES (?, ?, ?, ${fileSize}, ?, ${latValue}, ${lngValue}, ${categoryValue}, ?)
+            RETURNING id
         `;
 
     const params = [
@@ -89,7 +90,7 @@ export class Image {
     ];
 
     const result = await database.query(sql, params);
-    this.id = result.insertId;
+    this.id = result.insertId || result.rows?.[0]?.id;
     return this;
   }
 

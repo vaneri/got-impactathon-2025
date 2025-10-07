@@ -44,16 +44,18 @@ CityReport makes infrastructure fault reporting simple, transparent, and impactf
 
 - **Node.js** - JavaScript runtime
 - **Express.js** - Web application framework
-- **PostgreSQL/MySQL** - Relational database
+- **PostgreSQL 16** - Relational database with PostGIS support
 - **TypeScript** - Type-safe API development
+- **Docker** - Containerized database deployment
 
 ### System Requirements
 
 - **Node.js**: v20 or higher
 - **pnpm**: v10.x
-- **Database**: PostgreSQL 14+ or MySQL 8+
+- **Database**: PostgreSQL 16+ (with Docker support)
 - **Memory**: 4GB RAM minimum (8GB recommended)
 - **Storage**: 10GB available space
+- **Docker**: Optional for local database development
 
 ### Installation & Setup
 
@@ -75,26 +77,33 @@ pnpm install
 Create a `.env` file in the root directory:
 
 ```env
-# Database Configuration
-POSTGRES_HOST=localhost
-POSTGRES_PORT=5432
-POSTGRES_USER=postgres
-POSTGRES_PASSWORD=your_secure_password
-POSTGRES_DATABASE=mgis_db
+# PostgreSQL Database Configuration
+DB_HOST=localhost
+DB_PORT=5432
+DB_USER=postgres
+DB_PASSWORD=postgres
+DB_NAME=geotag_images
 
 # API Configuration
-PORT=3000
+PORT=3001
 NODE_ENV=development
-API_BASE_URL=http://localhost:3000
 ```
 
-#### 4. Initialize Database
+For detailed database setup instructions, see [DATABASE_SETUP.md](DATABASE_SETUP.md).
+
+#### 4. Start PostgreSQL Database
+
+Using Docker (recommended for local development):
 
 ```bash
-# Run database migrations
-cd database
-# Execute initialization scripts
+docker-compose up -d
 ```
+
+This starts PostgreSQL 16 and pgAdmin. The schema initializes automatically.
+
+Access pgAdmin at http://localhost:8080:
+- Email: `admin@gothenburg.se`
+- Password: `admin`
 
 #### 5. Start Development Servers
 
