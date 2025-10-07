@@ -33,11 +33,13 @@ app.use("/api/heatmap", heatmapRoutes);
 // Root endpoint
 app.get("/", (req, res) => {
   res.json({
-    name: "Community Geographic Information System API",
+    name: "Gothenburg CityReport API",
     version: "1.0.0",
     description:
-      "Enterprise-grade geographic data management and visualization platform for environmental monitoring",
+      "Fault reporting for streets, squares and parks - Official public document system for Gothenburg Municipality",
     status: "operational",
+    municipality: "Gothenburg",
+    emergency_contact: "031-365 00 00",
     endpoints: {
       health: "/health",
       images: "/api/images",
@@ -45,7 +47,7 @@ app.get("/", (req, res) => {
     },
     documentation: {
       swagger: "/api/docs",
-      support: "support@cgis.org",
+      support: "support@cityreport.io",
     },
     timestamp: new Date().toISOString(),
   });
@@ -58,7 +60,7 @@ async function startServer(): Promise<void> {
 
     app.listen(PORT, () => {
       console.log(`╔══════════════════════════════════════════════════════╗`);
-      console.log(`║  Community Geographic Information System API        ║`);
+      console.log(`║  Gothenburg CityReport API - Fault Reporting        ║`);
       console.log(`╠══════════════════════════════════════════════════════╣`);
       console.log(`║  Status:        OPERATIONAL                          ║`);
       console.log(

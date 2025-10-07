@@ -1,18 +1,20 @@
-# Community Geographic Information System (CGIS)
+# Gothenburg CityReport
 
-## Enterprise Geographic Data Management & Visualization Platform
+## Fault Reporting for Streets, Squares and Parks - Gothenburg Municipality
 
-[![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)](https://github.com/yourusername/cgis)
+[![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)](https://github.com/yourusername/cityreport)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
-[![Status](https://img.shields.io/badge/status-operational-success.svg)](https://github.com/yourusername/cgis)
+[![Status](https://img.shields.io/badge/status-operational-success.svg)](https://github.com/yourusername/cityreport)
 
 ### Overview
 
-The Community Geographic Information System (CGIS) is a professional, enterprise-grade platform designed for organizations, municipalities, and communities to efficiently manage, visualize, and analyze geographic data. Built with modern technologies and best practices, CGIS provides a secure, scalable solution for environmental monitoring, asset management, and spatial data analysis.
+**CityReport** is a modern, easy-to-use platform that empowers citizens to report infrastructure faults in streets, squares, and parks. Designed with Swedish municipalities in mind, it supports the principle of public access to information (_offentlighetsprincipen_) by registering all reports as official public documents.
 
-**🌍 Environmental Impact Mission**
+Report holes in streets, broken bike paths, malfunctioning street lights, overgrown bushes, damaged benches, or any maintenance issues. With photos, GPS location, and detailed descriptions, citizens help municipalities maintain better infrastructure and respond faster to community needs.
 
-CGIS empowers communities to maintain cleaner, healthier environments through systematic monitoring and rapid response. By facilitating efficient documentation and resolution of environmental concerns, we contribute to sustainable urban development and improved quality of life for all citizens. Our platform supports carbon-neutral operations and promotes community-driven environmental stewardship.
+**🌍 Our Mission**
+
+CityReport makes infrastructure fault reporting simple, transparent, and impactful. By giving everyone a voice to report problems, we enable faster response times, better resource allocation, and measurable community improvements. Every report contributes to safer streets, cleaner parks, and better-maintained public spaces.
 
 ### Key Features
 
@@ -190,9 +192,9 @@ We welcome contributions from the community. Please read our [Contributing Guide
 
 For technical support, please contact:
 
-- **Email**: support@cgis.org
-- **Documentation**: [https://docs.cgis.org](https://docs.cgis.org)
-- **Issue Tracker**: [GitHub Issues](https://github.com/yourusername/cgis/issues)
+- **Email**: support@cityreport.io
+- **Documentation**: [https://docs.cityreport.io](https://docs.cityreport.io)
+- **Issue Tracker**: [GitHub Issues](https://github.com/yourusername/cityreport/issues)
 
 ### License
 
@@ -217,4 +219,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-© 2025 Community Geographic Information System. All rights reserved.
+© 2025 Gothenburg CityReport. City of Gothenburg.

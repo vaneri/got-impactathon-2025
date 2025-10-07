@@ -99,14 +99,14 @@ export default function Home() {
               <div className="w-12 h-12 md:w-14 md:h-14 bg-white rounded-lg flex items-center justify-center shadow-lg flex-shrink-0">
                 <svg className="w-7 h-7 md:w-9 md:h-9 text-blue-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
-                </svg>
-              </div>
+                  </svg>
+                </div>
               <div className="min-w-0">
                 <h1 className="text-lg md:text-2xl lg:text-3xl font-bold mb-0.5 md:mb-1 truncate" style={{color: '#ffffff'}}>
-                  Community GIS
+                  Gothenburg FaultReport
                 </h1>
                 <p className="text-xs md:text-sm font-medium hidden sm:block" style={{color: '#bfdbfe'}}>
-                  Environmental Monitoring & Asset Management
+                  Fault Reporting - Streets, Squares & Parks
                 </p>
                 <div className="flex items-center space-x-2 mt-1 md:mt-2">
                   <div className="env-badge flex items-center space-x-1 px-2 md:px-3 py-0.5 md:py-1 rounded-full" style={{
@@ -117,8 +117,8 @@ export default function Home() {
                       <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM4.332 8.027a6.012 6.012 0 011.912-2.706C6.512 5.73 6.974 6 7.5 6A1.5 1.5 0 019 7.5V8a2 2 0 004 0 2 2 0 011.523-1.943A5.977 5.977 0 0116 10c0 .34-.028.675-.083 1H15a2 2 0 00-2 2v2.197A5.973 5.973 0 0110 16v-2a2 2 0 00-2-2 2 2 0 01-2-2 2 2 0 00-1.668-1.973z" clipRule="evenodd" />
                     </svg>
                     <span className="env-badge-text text-[10px] md:text-xs font-semibold whitespace-nowrap" style={{color: '#dcfce7'}}>Eco-Friendly</span>
-                  </div>
-                </div>
+            </div>
+              </div>
               </div>
             </div>
             <div className="text-right flex-shrink-0">
@@ -132,21 +132,26 @@ export default function Home() {
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Map Section */}
-        <div className="gov-card p-6 mb-8 relative">
-          <div className="mb-6">
-            <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">
-              Report Anything, Anytime, Anywhere
-            </h2>
-            <p className="text-gray-600 text-sm md:text-base leading-relaxed">
-              Capture waste, infrastructure defects, environmental hazards, and community concerns in real-time. 
-              Your reports make our community cleaner, safer, and better for everyone.
+        <div className="gov-card p-4 md:p-6 mb-8 relative">
+          <div className="mb-4 md:mb-6">
+            <h2 className="text-lg md:text-2xl lg:text-3xl font-bold text-gray-900 mb-2">
+              Fault Reporting - Streets, Squares and Parks
+              </h2>
+            <p className="text-gray-600 text-xs md:text-sm lg:text-base leading-relaxed mb-3">
+              Report holes in streets or bike paths, broken street lights, overgrown bushes, damaged benches, or any infrastructure issues. 
+              Your report becomes an official public document and helps us maintain our community.
             </p>
-            <div className="flex items-center space-x-2 mt-3">
-              <span className="status-badge status-active">Live Data</span>
-              <span className="text-sm text-gray-500">Updated: {new Date().toLocaleTimeString()}</span>
+            <div className="bg-red-50 border-l-4 border-red-500 p-3 mb-3">
+              <p className="text-xs md:text-sm text-red-800">
+                <strong>Emergency?</strong> For urgent issues, call the City immediately at <a href="tel:031-36500000" className="font-bold underline">031-365 00 00</a>
+              </p>
+            </div>
+            <div className="flex items-center space-x-2">
+              <span className="status-badge status-active text-[10px] md:text-xs">Live Data</span>
+              <span className="text-xs md:text-sm text-gray-500">Updated: {new Date().toLocaleTimeString()}</span>
             </div>
           </div>
-          <div className="rounded-lg overflow-hidden border border-gray-200 shadow-sm" style={{height: '500px'}}>
+          <div className="rounded-lg overflow-hidden border border-gray-200 shadow-sm h-[400px] md:h-[500px] lg:h-[600px]">
             <InteractiveMap
               mapData={mapData}
               onMarkerClick={handleMarkerClick}
@@ -209,98 +214,129 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Environmental Impact Banner */}
-        <div className="gov-card p-6 mb-8 bg-gradient-to-r from-green-50 to-blue-50 border-l-4 border-green-500">
+        {/* Important Information - Public Documents */}
+        <div className="gov-card p-6 mb-8 bg-gradient-to-r from-blue-50 to-indigo-50 border-l-4 border-blue-500">
           <div className="flex items-start space-x-4">
-            <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
-              <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
+              <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
               </svg>
             </div>
             <div className="flex-1">
-              <h3 className="text-xl font-bold text-gray-900 mb-2">Making a Positive Environmental Impact</h3>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">Your Report Becomes a Public Document</h3>
               <p className="text-gray-700 leading-relaxed mb-3">
-                This system empowers communities to maintain cleaner, healthier environments through efficient monitoring and rapid response. 
-                By documenting and addressing environmental concerns systematically, we contribute to sustainable urban development and improved quality of life for all citizens.
+                When you submit a report, it is registered as an official public document. All citizens have the right to access and read public documents under Sweden's principle of public access to information (<em>offentlighetsprincipen</em>).
               </p>
-              <div className="grid grid-cols-3 gap-4 mt-4">
-                <div className="text-center p-3 bg-white rounded-lg border border-green-200">
-                  <div className="text-2xl font-bold text-green-600 mb-1">100%</div>
-                  <div className="text-xs text-gray-600">Carbon Neutral Operations</div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                <div className="bg-white rounded-lg p-4 border border-blue-200">
+                  <div className="flex items-start space-x-3">
+                    <svg className="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <div>
+                      <h4 className="font-semibold text-gray-900 mb-1 text-sm">Optional Contact Information</h4>
+                      <p className="text-xs text-gray-600">You can choose to remain anonymous. However, without contact details, we cannot ask follow-up questions or update you on progress.</p>
+                    </div>
+                  </div>
                 </div>
-                <div className="text-center p-3 bg-white rounded-lg border border-blue-200">
-                  <div className="text-2xl font-bold text-blue-600 mb-1">24/7</div>
-                  <div className="text-xs text-gray-600">Environmental Monitoring</div>
-                </div>
-                <div className="text-center p-3 bg-white rounded-lg border border-teal-200">
-                  <div className="text-2xl font-bold text-teal-600 mb-1">Real-Time</div>
-                  <div className="text-xs text-gray-600">Community Response</div>
+                <div className="bg-white rounded-lg p-4 border border-blue-200">
+                  <div className="flex items-start space-x-3">
+                    <svg className="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                    </svg>
+                    <div>
+                      <h4 className="font-semibold text-gray-900 mb-1 text-sm">Data Protection</h4>
+                      <p className="text-xs text-gray-600">We process your personal data in accordance with GDPR and Swedish law. Learn more about how we handle your information.</p>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
 
-        {/* System Features */}
+        {/* What You Can Report */}
         <div className="gov-card p-8">
           <h3 className="text-2xl font-bold text-gray-800 mb-6">
-            System Capabilities & Features
+            What You Can Report
           </h3>
           <div className="grid md:grid-cols-4 gap-6">
             <div className="border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow">
               <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
                 <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
                 </svg>
               </div>
               <h4 className="font-semibold text-gray-800 mb-2 text-lg">
-                Visual Documentation
+                Roads & Paths
               </h4>
               <p className="text-gray-600 text-sm">
-                Capture and store high-resolution images with geographic coordinates for comprehensive asset tracking.
+                Holes in streets, damaged bike paths, broken sidewalks, or paving issues. Include exact address or coordinates.
+              </p>
+            </div>
+
+            <div className="border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow">
+              <div className="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center mb-4">
+                <svg className="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                </svg>
+              </div>
+              <h4 className="font-semibold text-gray-800 mb-2 text-lg">
+                Street Lighting
+              </h4>
+              <p className="text-gray-600 text-sm">
+                Lights that are not working, flickering, or damaged. Provide location and light pole number if available.
               </p>
             </div>
 
             <div className="border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow">
               <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4">
                 <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </div>
               <h4 className="font-semibold text-gray-800 mb-2 text-lg">
-                Data Analytics
+                Parks & Green Spaces
               </h4>
               <p className="text-gray-600 text-sm">
-                Advanced analytics and reporting tools for data-driven decision making and resource allocation.
-              </p>
-            </div>
-
-            <div className="border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow">
-              <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-4">
-                <svg className="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                </svg>
-              </div>
-              <h4 className="font-semibold text-gray-800 mb-2 text-lg">
-                Secure Platform
-              </h4>
-              <p className="text-gray-600 text-sm">
-                Enterprise-grade security with role-based access control and encrypted data transmission.
+                Overgrown bushes that need cutting, damaged benches, broken playground equipment, or maintenance issues.
               </p>
             </div>
 
             <div className="border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow">
               <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mb-4">
                 <svg className="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
                 </svg>
               </div>
               <h4 className="font-semibold text-gray-800 mb-2 text-lg">
-                Mobile Ready
+                Public Spaces
               </h4>
               <p className="text-gray-600 text-sm">
-                Responsive design optimized for field operations on tablets and mobile devices.
+                Issues in squares, public furniture damage, graffiti, or general maintenance needed in shared areas.
               </p>
+            </div>
+          </div>
+
+          <div className="mt-8 p-6 bg-blue-50 rounded-lg border border-blue-200">
+            <h4 className="text-lg font-bold text-gray-900 mb-3">📝 How to Submit a Good Report</h4>
+            <div className="grid md:grid-cols-2 gap-4 text-sm">
+              <div className="flex items-start space-x-2">
+                <span className="text-blue-600 font-bold mt-0.5">1.</span>
+                <p className="text-gray-700"><strong>Be Specific:</strong> Describe the fault in detail. Instead of "broken light," write "street light not working on Main Street between 5th and 6th Avenue."</p>
+              </div>
+              <div className="flex items-start space-x-2">
+                <span className="text-blue-600 font-bold mt-0.5">2.</span>
+                <p className="text-gray-700"><strong>Provide Location:</strong> Include exact address (street name and number) or GPS coordinates so we can find and fix the issue quickly.</p>
+              </div>
+              <div className="flex items-start space-x-2">
+                <span className="text-blue-600 font-bold mt-0.5">3.</span>
+                <p className="text-gray-700"><strong>Add Photos:</strong> Take clear photos showing the problem. Multiple angles help our teams understand the situation better.</p>
+              </div>
+              <div className="flex items-start space-x-2">
+                <span className="text-blue-600 font-bold mt-0.5">4.</span>
+                <p className="text-gray-700"><strong>Include Contact Info:</strong> Optional but recommended. We can update you on progress and ask questions if needed.</p>
+              </div>
             </div>
           </div>
 
@@ -308,7 +344,7 @@ export default function Home() {
             <div className="flex items-center justify-between flex-wrap gap-4">
               <div>
                 <p className="text-sm text-gray-600">Platform Version 1.0.0</p>
-                <p className="text-xs text-gray-500">© 2025 Community Geographic Information System. All rights reserved.</p>
+                <p className="text-xs text-gray-500">© 2025 Gothenburg CityReport. City of Gothenburg.</p>
                 <div className="flex items-center space-x-3 mt-2">
                   <div className="flex items-center space-x-1 text-xs text-green-600">
                     <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
@@ -337,24 +373,25 @@ export default function Home() {
       </main>
 
       {/* Floating Action Button - Bottom Left */}
-      <button
-        onClick={handleOpenCamera}
-        className="fixed bottom-6 left-6 z-50 w-16 h-16 md:w-20 md:h-20 bg-primary hover:bg-primary-dark shadow-2xl rounded-full flex flex-col items-center justify-center transition-all duration-300 hover:scale-110 group"
-        style={{
-          backgroundColor: '#1e40af',
-          boxShadow: '0 10px 25px -5px rgba(30, 64, 175, 0.5), 0 8px 10px -6px rgba(30, 64, 175, 0.3)'
-        }}
-        title="Report Issue"
-        aria-label="Report new environmental issue"
-      >
-        <svg className="w-8 h-8 md:w-10 md:h-10 text-white mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-        </svg>
-        <span className="text-[10px] md:text-xs text-white font-semibold uppercase tracking-wide">Report</span>
-        
-        {/* Pulse animation ring */}
-        <span className="absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75 animate-ping group-hover:opacity-0"></span>
-      </button>
+        <button
+          onClick={handleOpenCamera}
+          className="fixed bottom-4 left-4 md:bottom-6 md:left-6 w-14 h-14 md:w-16 md:h-16 lg:w-20 lg:h-20 shadow-2xl rounded-full flex flex-col items-center justify-center transition-all duration-300 hover:scale-105 active:scale-95 group"
+          style={{
+            backgroundColor: '#1e40af',
+            boxShadow: '0 10px 25px -5px rgba(30, 64, 175, 0.5), 0 8px 10px -6px rgba(30, 64, 175, 0.3)',
+            zIndex: 9999
+          }}
+          title="Report Fault"
+          aria-label="Report new fault or issue"
+        >
+          <svg className="w-6 h-6 md:w-8 md:h-8 lg:w-10 lg:h-10 text-white mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+          </svg>
+          <span className="text-[9px] md:text-[10px] lg:text-xs text-white font-semibold uppercase tracking-wide">Report</span>
+          
+          {/* Pulse animation ring */}
+          <span className="absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75 animate-ping group-hover:opacity-0"></span>
+        </button>
 
       {/* Image Modal */}
       <ImageModal
