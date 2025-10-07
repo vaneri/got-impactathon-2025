@@ -3,15 +3,19 @@
 import { useState, useRef, useCallback } from "react";
 import Image from "next/image";
 import { MapMarker } from "../types/map";
+import { Translations } from "../locales/translations";
+import SuccessModal from "./SuccessModal";
 
 interface CameraCaptureProps {
   onNewMarker: (marker: MapMarker) => void;
   onClose: () => void;
+  translations: Translations;
 }
 
 export default function CameraCapture({
   onNewMarker,
   onClose,
+  translations: t,
 }: CameraCaptureProps) {
   const [isCapturing, setIsCapturing] = useState(false);
   const [capturedImage, setCapturedImage] = useState<string | null>(null);
@@ -20,6 +24,7 @@ export default function CameraCapture({
     longitude: number;
   } | null>(null);
   const [isGettingLocation, setIsGettingLocation] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const streamRef = useRef<MediaStream | null>(null);
@@ -114,13 +119,10 @@ export default function CameraCapture({
     // Reset state
     setCapturedImage(null);
     setLocation(null);
-    onClose();
-
-    // Show success message
-    alert(
-      "✓ Report submitted successfully!\n\nYour data has been recorded in the system. Thank you for contributing to a cleaner, healthier environment for our community."
-    );
-  }, [capturedImage, location, onNewMarker, onClose]);
+    
+    // Show success modal
+    setShowSuccessModal(true);
+  }, [capturedImage, location, onNewMarker]);
 
   const handleCancel = useCallback(() => {
     stopCamera();
@@ -128,6 +130,11 @@ export default function CameraCapture({
     setLocation(null);
     onClose();
   }, [stopCamera, onClose]);
+
+  const handleSuccessClose = useCallback(() => {
+    setShowSuccessModal(false);
+    onClose();
+  }, [onClose]);
 
   return (
     <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black bg-opacity-60 backdrop-blur-sm">
@@ -141,7 +148,7 @@ export default function CameraCapture({
               </svg>
             </div>
             <h2 className="text-xl font-bold text-gray-900">
-              Submit Location Report
+              {t.cameraModalTitle}
             </h2>
           </div>
           <button
@@ -157,7 +164,7 @@ export default function CameraCapture({
         {!isCapturing && !capturedImage && (
           <div className="text-center">
             <p className="text-gray-600 mb-4 leading-relaxed">
-              Capture visual documentation with geographic coordinates for official records and analysis.
+              {t.cameraModalDescription}
             </p>
             <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-6">
               <div className="flex items-start space-x-3">
@@ -165,9 +172,9 @@ export default function CameraCapture({
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
                 <div className="text-left">
-                  <p className="text-sm font-semibold text-green-900 mb-1">Environmental Impact</p>
+                  <p className="text-sm font-semibold text-green-900 mb-1">{t.cameraEnvironmentalTitle}</p>
                   <p className="text-xs text-green-700 leading-relaxed">
-                    Your report helps maintain a cleaner, healthier environment for the community. Together, we create sustainable change.
+                    {t.cameraEnvironmentalDescription}
                   </p>
                 </div>
               </div>
@@ -179,13 +186,13 @@ export default function CameraCapture({
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
               </svg>
-              <span>Activate Camera</span>
+              <span>{t.cameraActivateButton}</span>
             </button>
             <button
               onClick={handleCancel}
               className="text-gray-500 text-sm hover:text-gray-700 transition-colors"
             >
-              Cancel Operation
+              {t.cameraCancelButton}
             </button>
           </div>
         )}
@@ -201,7 +208,7 @@ export default function CameraCapture({
               />
               <div className="absolute top-2 right-2 bg-red-500 text-white text-xs px-2 py-1 rounded flex items-center space-x-1">
                 <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
-                <span>RECORDING</span>
+                <span>{t.cameraRecording}</span>
               </div>
             </div>
             <button
@@ -211,13 +218,13 @@ export default function CameraCapture({
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
               </svg>
-              <span>Capture Image</span>
+              <span>{t.cameraCaptureButton}</span>
             </button>
             <button
               onClick={handleCancel}
               className="text-gray-500 text-sm hover:text-gray-700 transition-colors"
             >
-              Cancel Operation
+              {t.cameraCancelButton}
             </button>
           </div>
         )}
@@ -238,7 +245,7 @@ export default function CameraCapture({
               <div className="mb-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
                 <div className="flex items-center space-x-3">
                   <div className="gov-spinner h-5 w-5"></div>
-                  <span className="text-sm text-gray-700">Acquiring GPS coordinates...</span>
+                  <span className="text-sm text-gray-700">{t.cameraLocationAcquiring}</span>
                 </div>
               </div>
             )}
@@ -249,15 +256,15 @@ export default function CameraCapture({
                   <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
-                  <span className="text-sm font-semibold text-gray-700">Location Acquired</span>
+                  <span className="text-sm font-semibold text-gray-700">{t.cameraLocationAcquired}</span>
                 </div>
                 <div className="grid grid-cols-2 gap-2 text-xs">
                   <div>
-                    <span className="text-gray-500">Latitude:</span>
+                    <span className="text-gray-500">{t.cameraLatitude}</span>
                     <p className="font-mono text-gray-900">{location.latitude.toFixed(6)}°</p>
                   </div>
                   <div>
-                    <span className="text-gray-500">Longitude:</span>
+                    <span className="text-gray-500">{t.cameraLongitude}</span>
                     <p className="font-mono text-gray-900">{location.longitude.toFixed(6)}°</p>
                   </div>
                 </div>
@@ -269,7 +276,7 @@ export default function CameraCapture({
                 onClick={handleCancel}
                 className="flex-1 px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition-colors font-medium"
               >
-                Cancel
+                {t.cameraCancelAction}
               </button>
               <button
                 onClick={saveLocationReport}
@@ -283,7 +290,7 @@ export default function CameraCapture({
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
-                <span>Submit Report</span>
+                <span>{t.cameraSubmitReport}</span>
               </button>
             </div>
           </div>
@@ -291,6 +298,13 @@ export default function CameraCapture({
 
         <canvas ref={canvasRef} className="hidden" />
       </div>
+      
+      {/* Success Modal */}
+      <SuccessModal
+        isOpen={showSuccessModal}
+        onClose={handleSuccessClose}
+        translations={t}
+      />
     </div>
   );
 }

@@ -58,6 +58,28 @@ export interface Translations {
   reportButton: string;
   reportButtonTitle: string;
   reportButtonAria: string;
+
+  // Camera Capture Modal
+  cameraModalTitle: string;
+  cameraModalDescription: string;
+  cameraEnvironmentalTitle: string;
+  cameraEnvironmentalDescription: string;
+  cameraActivateButton: string;
+  cameraCancelButton: string;
+  cameraRecording: string;
+  cameraCaptureButton: string;
+  cameraLocationAcquiring: string;
+  cameraLocationAcquired: string;
+  cameraLatitude: string;
+  cameraLongitude: string;
+  cameraCancelAction: string;
+  cameraSubmitReport: string;
+
+  // Success Modal
+  successModalTitle: string;
+  successModalMessage: string;
+  successModalSubMessage: string;
+  successModalCloseButton: string;
 }
 
 export const translations: Record<Language, Translations> = {
@@ -131,6 +153,32 @@ export const translations: Record<Language, Translations> = {
     reportButton: "Report",
     reportButtonTitle: "Report Fault",
     reportButtonAria: "Report new fault or issue",
+
+    // Camera Capture Modal
+    cameraModalTitle: "Submit Location Report",
+    cameraModalDescription:
+      "Capture visual documentation with geographic coordinates for official records and analysis.",
+    cameraEnvironmentalTitle: "Environmental Impact",
+    cameraEnvironmentalDescription:
+      "Your report helps maintain a cleaner, healthier environment for the community. Together, we create sustainable change.",
+    cameraActivateButton: "Activate Camera",
+    cameraCancelButton: "Cancel Operation",
+    cameraRecording: "RECORDING",
+    cameraCaptureButton: "Capture Image",
+    cameraLocationAcquiring: "Acquiring GPS coordinates...",
+    cameraLocationAcquired: "Location Acquired",
+    cameraLatitude: "Latitude:",
+    cameraLongitude: "Longitude:",
+    cameraCancelAction: "Cancel",
+    cameraSubmitReport: "Submit Report",
+
+    // Success Modal
+    successModalTitle: "Report Submitted Successfully!",
+    successModalMessage:
+      "Your fault report has been registered in the system as an official public document.",
+    successModalSubMessage:
+      "Thank you for contributing to a cleaner, safer community. Your report will be reviewed and addressed by the appropriate department.",
+    successModalCloseButton: "Close",
   },
   sv: {
     // Header
@@ -202,5 +250,31 @@ export const translations: Record<Language, Translations> = {
     reportButton: "Anmäl",
     reportButtonTitle: "Anmäl Fel",
     reportButtonAria: "Anmäl nytt fel eller problem",
+
+    // Camera Capture Modal
+    cameraModalTitle: "Skicka Platsrapport",
+    cameraModalDescription:
+      "Ta en bild med geografiska koordinater för officiella register och analys.",
+    cameraEnvironmentalTitle: "Miljöpåverkan",
+    cameraEnvironmentalDescription:
+      "Din anmälan hjälper till att upprätthålla en renare, hälsosammare miljö för samhället. Tillsammans skapar vi hållbar förändring.",
+    cameraActivateButton: "Aktivera Kamera",
+    cameraCancelButton: "Avbryt Operation",
+    cameraRecording: "SPELAR IN",
+    cameraCaptureButton: "Ta Bild",
+    cameraLocationAcquiring: "Hämtar GPS-koordinater...",
+    cameraLocationAcquired: "Plats Hämtad",
+    cameraLatitude: "Latitud:",
+    cameraLongitude: "Longitud:",
+    cameraCancelAction: "Avbryt",
+    cameraSubmitReport: "Skicka Rapport",
+
+    // Success Modal
+    successModalTitle: "Rapporten Har Skickats!",
+    successModalMessage:
+      "Din felanmälan har registrerats i systemet som en allmän handling.",
+    successModalSubMessage:
+      "Tack för att du bidrar till ett renare och säkrare samhälle. Din anmälan kommer att granskas och hanteras av lämplig avdelning.",
+    successModalCloseButton: "Stäng",
   },
 };
