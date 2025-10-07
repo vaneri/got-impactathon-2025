@@ -90,7 +90,7 @@ class Database {
     }
   }
 
-  async query(sql: string, params: any[] = []): Promise<any> {
+  async query<T = unknown>(sql: string, params: unknown[] = []): Promise<T[]> {
     if (!this.pool) {
       await this.connect();
     }
@@ -100,19 +100,18 @@ class Database {
       let paramIndex = 1;
       const pgSql = sql.replace(/\?/g, () => `$${paramIndex++}`);
 
-      const result: QueryResult = await this.pool!.query(pgSql, params);
+      const result: QueryResult = await this.pool!.query(
+        pgSql,
+        params as any[]
+      );
 
       // For INSERT queries, return an object with insertId (PostgreSQL uses RETURNING)
       if (sql.trim().toUpperCase().startsWith("INSERT")) {
-        return {
-          insertId: result.rows[0]?.id || null,
-          rowCount: result.rowCount,
-          rows: result.rows,
-        };
+        return result.rows as T[];
       }
 
       // For SELECT queries, return rows array
-      return result.rows;
+      return result.rows as T[];
     } catch (error) {
       console.error("Database query error:", error);
       throw error;

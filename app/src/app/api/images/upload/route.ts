@@ -19,7 +19,7 @@ export async function POST(request: NextRequest) {
     const category = formData.get("category") as string;
     const description = formData.get("description") as string;
 
-    let coords = {
+    const coords = {
       latitude: undefined as number | undefined,
       longitude: undefined as number | undefined,
     };

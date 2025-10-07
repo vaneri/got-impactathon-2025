@@ -87,24 +87,24 @@ export class Image {
       this.description || null,
     ];
 
-    const result = await database.query(sql, params);
-    this.id = result.insertId || result.rows?.[0]?.id;
+    const rows = await database.query<{ id: number }>(sql, params);
+    this.id = rows[0]?.id;
     return this;
   }
 
   // Find image by ID
-  static async findById(id: number): Promise<any | null> {
+  static async findById(id: number): Promise<Record<string, unknown> | null> {
     const idInt = parseInt(id.toString(), 10);
     if (isNaN(idInt)) {
       return null;
     }
     const sql = `SELECT * FROM images WHERE id = ${idInt}`;
-    const results = await database.query(sql);
+    const results = await database.query<Record<string, unknown>>(sql);
     return results.length > 0 ? results[0] : null;
   }
 
   // Get all images with coordinates
-  static async getAllWithCoordinates(): Promise<any[]> {
+  static async getAllWithCoordinates(): Promise<Record<string, unknown>[]> {
     const sql = `
             SELECT 
               i.id, i.filename, i.original_filename, i.mime_type, i.file_size,
@@ -117,14 +117,14 @@ export class Image {
             ORDER BY i.upload_timestamp DESC
         `;
 
-    return await database.query(sql);
+    return await database.query<Record<string, unknown>>(sql);
   }
 
   // Get all images
   static async findAll(
     limit: number = 100,
     offset: number = 0
-  ): Promise<any[]> {
+  ): Promise<Record<string, unknown>[]> {
     const limitInt = parseInt(limit.toString(), 10);
     const offsetInt = parseInt(offset.toString(), 10);
 
@@ -140,6 +140,6 @@ export class Image {
             LIMIT ${limitInt} OFFSET ${offsetInt}
         `;
 
-    return await database.query(sql);
+    return await database.query<Record<string, unknown>>(sql);
   }
 }
