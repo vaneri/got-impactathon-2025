@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useCallback } from "react";
+import Image from "next/image";
 import { MapMarker } from "../types/map";
 
 interface CameraCaptureProps {
@@ -48,25 +49,6 @@ export default function CameraCapture({
     setIsCapturing(false);
   }, []);
 
-  const capturePhoto = useCallback(() => {
-    if (videoRef.current && canvasRef.current) {
-      const canvas = canvasRef.current;
-      const video = videoRef.current;
-      const context = canvas.getContext("2d");
-
-      canvas.width = video.videoWidth;
-      canvas.height = video.videoHeight;
-
-      if (context) {
-        context.drawImage(video, 0, 0);
-        const imageDataUrl = canvas.toDataURL("image/png");
-        setCapturedImage(imageDataUrl);
-        stopCamera();
-        getCurrentLocation();
-      }
-    }
-  }, [stopCamera]);
-
   const getCurrentLocation = useCallback(() => {
     setIsGettingLocation(true);
 
@@ -92,6 +74,25 @@ export default function CameraCapture({
       { enableHighAccuracy: true, timeout: 10000, maximumAge: 60000 }
     );
   }, []);
+
+  const capturePhoto = useCallback(() => {
+    if (videoRef.current && canvasRef.current) {
+      const canvas = canvasRef.current;
+      const video = videoRef.current;
+      const context = canvas.getContext("2d");
+
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+
+      if (context) {
+        context.drawImage(video, 0, 0);
+        const imageDataUrl = canvas.toDataURL("image/png");
+        setCapturedImage(imageDataUrl);
+        stopCamera();
+        getCurrentLocation();
+      }
+    }
+  }, [stopCamera, getCurrentLocation]);
 
   const saveLocationReport = useCallback(() => {
     if (!capturedImage || !location) return;
@@ -210,11 +211,13 @@ export default function CameraCapture({
 
         {capturedImage && (
           <div>
-            <div className="mb-4">
-              <img
+            <div className="mb-4 relative w-full h-64">
+              <Image
                 src={capturedImage}
                 alt="Captured location documentation"
-                className="w-full rounded-lg border border-gray-300"
+                fill
+                className="rounded-lg border border-gray-300 object-cover"
+                unoptimized
               />
             </div>
 
