@@ -102,25 +102,28 @@ export default function Home() {
                 </svg>
               </div>
               <div>
-                <h1 className="text-3xl font-bold text-white mb-1">
+                <h1 className="text-3xl font-bold mb-1" style={{color: '#ffffff'}}>
                   Community Geographic Information System
                 </h1>
-                <p className="text-blue-100 text-sm font-medium">
+                <p className="text-sm font-medium" style={{color: '#bfdbfe'}}>
                   Environmental Monitoring & Asset Management Platform
                 </p>
                 <div className="flex items-center space-x-2 mt-2">
-                  <div className="flex items-center space-x-1 bg-green-500 bg-opacity-20 px-3 py-1 rounded-full">
-                    <svg className="w-4 h-4 text-green-200" fill="currentColor" viewBox="0 0 20 20">
+                  <div className="env-badge flex items-center space-x-1 px-3 py-1 rounded-full" style={{
+                    backgroundColor: 'rgba(22, 163, 74, 0.9)',
+                    border: '1px solid #4ade80'
+                  }}>
+                    <svg className="w-4 h-4 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20" style={{color: '#dcfce7'}}>
                       <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM4.332 8.027a6.012 6.012 0 011.912-2.706C6.512 5.73 6.974 6 7.5 6A1.5 1.5 0 019 7.5V8a2 2 0 004 0 2 2 0 011.523-1.943A5.977 5.977 0 0116 10c0 .34-.028.675-.083 1H15a2 2 0 00-2 2v2.197A5.973 5.973 0 0110 16v-2a2 2 0 00-2-2 2 2 0 01-2-2 2 2 0 00-1.668-1.973z" clipRule="evenodd" />
                     </svg>
-                    <span className="text-xs text-green-200 font-semibold">Environmental Impact Initiative</span>
+                    <span className="env-badge-text text-xs font-semibold" style={{color: '#dcfce7'}}>Environmental Impact Initiative</span>
                   </div>
                 </div>
               </div>
             </div>
             <div className="text-right">
-              <div className="text-blue-100 text-sm">Community Platform</div>
-              <div className="text-white font-semibold">{new Date().toLocaleDateString()}</div>
+              <div className="text-sm font-medium" style={{color: '#bfdbfe'}}>Community Platform</div>
+              <div className="font-semibold text-lg" style={{color: '#ffffff'}}>{new Date().toLocaleDateString()}</div>
             </div>
           </div>
         </div>

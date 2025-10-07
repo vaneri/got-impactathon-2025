@@ -2,10 +2,10 @@
 @import "leaflet/dist/leaflet.css";
 
 :root {
-  /* Professional Government Color Palette */
+  /* Professional Color Palette */
   --background: #f8f9fa;
   --foreground: #1a1d23;
-  --primary: #1e40af; /* Government Blue */
+  --primary: #1e40af; /* Professional Blue */
   --primary-dark: #1e3a8a;
   --primary-light: #3b82f6;
   --secondary: #475569; /* Professional Gray */
@@ -16,7 +16,9 @@
   --danger: #dc2626; /* Alert Red */
   --border: #e2e8f0;
   --card-bg: #ffffff;
-  --header-gradient: linear-gradient(135deg, #1e3a8a 0%, #1e40af 50%, #3b82f6 100%);
+  --header-bg: #1e3a8a; /* Deep blue for better contrast */
+  --header-text: #ffffff;
+  --header-text-secondary: #e0e7ff;
 }
 
 @theme inline {
@@ -62,9 +64,22 @@
 /* Professional Header */
 .gov-header,
 .pro-header {
-  background: var(--header-gradient);
-  border-bottom: 4px solid var(--primary-dark);
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  background: var(--header-bg);
+  border-bottom: 3px solid #3b82f6;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.15), 0 2px 4px -1px rgba(0, 0, 0, 0.1);
+}
+
+.gov-header h1,
+.gov-header h2,
+.gov-header h3,
+.gov-header p:not(.env-badge-text),
+.gov-header div:not(.env-badge),
+.pro-header h1,
+.pro-header h2,
+.pro-header h3,
+.pro-header p:not(.env-badge-text),
+.pro-header div:not(.env-badge) {
+  color: var(--header-text);
 }
 
 /* Professional Card Styles */
