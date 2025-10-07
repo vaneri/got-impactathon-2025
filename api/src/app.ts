@@ -33,10 +33,10 @@ app.use("/api/heatmap", heatmapRoutes);
 // Root endpoint
 app.get("/", (req, res) => {
   res.json({
-    name: "Municipal Geographic Information System API",
+    name: "Community Geographic Information System API",
     version: "1.0.0",
     description:
-      "Enterprise-grade geographic data management and visualization platform",
+      "Enterprise-grade geographic data management and visualization platform for environmental monitoring",
     status: "operational",
     endpoints: {
       health: "/health",
@@ -45,7 +45,7 @@ app.get("/", (req, res) => {
     },
     documentation: {
       swagger: "/api/docs",
-      support: "support@municipality.gov",
+      support: "support@cgis.org",
     },
     timestamp: new Date().toISOString(),
   });
@@ -58,7 +58,7 @@ async function startServer(): Promise<void> {
 
     app.listen(PORT, () => {
       console.log(`╔══════════════════════════════════════════════════════╗`);
-      console.log(`║  Municipal Geographic Information System API        ║`);
+      console.log(`║  Community Geographic Information System API        ║`);
       console.log(`╠══════════════════════════════════════════════════════╣`);
       console.log(`║  Status:        OPERATIONAL                          ║`);
       console.log(

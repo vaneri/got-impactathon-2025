@@ -60,14 +60,16 @@
 }
 
 /* Professional Header */
-.gov-header {
+.gov-header,
+.pro-header {
   background: var(--header-gradient);
   border-bottom: 4px solid var(--primary-dark);
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
 
 /* Professional Card Styles */
-.gov-card {
+.gov-card,
+.pro-card {
   background: var(--card-bg);
   border: 1px solid var(--border);
   border-radius: 0.5rem;
@@ -75,13 +77,15 @@
   transition: box-shadow 0.3s ease, transform 0.3s ease;
 }
 
-.gov-card:hover {
+.gov-card:hover,
+.pro-card:hover {
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
   transform: translateY(-2px);
 }
 
 /* Professional Buttons */
-.gov-btn-primary {
+.gov-btn-primary,
+.pro-btn-primary {
   background: var(--primary);
   color: white;
   border: 2px solid var(--primary-dark);
@@ -92,13 +96,15 @@
   box-shadow: 0 4px 6px -1px rgba(30, 64, 175, 0.3);
 }
 
-.gov-btn-primary:hover {
+.gov-btn-primary:hover,
+.pro-btn-primary:hover {
   background: var(--primary-dark);
   box-shadow: 0 10px 15px -3px rgba(30, 64, 175, 0.4);
   transform: translateY(-1px);
 }
 
-.gov-btn-secondary {
+.gov-btn-secondary,
+.pro-btn-secondary {
   background: var(--secondary);
   color: white;
   border: 2px solid var(--secondary-light);
@@ -188,7 +194,8 @@ textarea:focus {
 }
 
 /* Loading Spinner */
-.gov-spinner {
+.gov-spinner,
+.pro-spinner {
   border: 3px solid var(--border);
   border-top: 3px solid var(--primary);
   border-radius: 50%;
