@@ -1,11 +1,11 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
 export async function GET(
-  request: NextRequest,
-  { params }: { params: { filename: string } }
+  _request: Request,
+  context: { params: Record<string, string | string[]> }
 ) {
   try {
-    const filename = params.filename;
+    const filename = String(context.params.filename);
 
     // Find image by filename
     const sql = `SELECT image_data, mime_type FROM images WHERE filename = ?`;
