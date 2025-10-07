@@ -1,7 +1,17 @@
-import "dotenv/config";
+// IMPORTANT: Load .env BEFORE any other imports that might use env variables
+import dotenv from "dotenv";
+const envPath = "/home/vaneri/got-impactathon-2025/.env";
+dotenv.config({ path: envPath });
+
+console.log("📂 Loading .env from:", envPath);
+console.log(
+  "🔍 POSTGRES_URL:",
+  process.env.POSTGRES_URL ? "✓ Found" : "✗ Not found"
+);
+
 import express from "express";
 import cors from "cors";
-import path from "path";
+import * as path from "path";
 
 import { database } from "./config/database";
 import imageRoutes from "./routes/imageRoutes";

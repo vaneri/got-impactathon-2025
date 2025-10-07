@@ -1,32 +1,74 @@
 import { Pool, PoolConfig, QueryResult } from "pg";
 
 interface DatabaseConfig extends PoolConfig {
-  host: string;
-  port: number;
-  user: string;
-  password: string;
-  database: string;
+  connectionString?: string;
+  host?: string;
+  port?: number;
+  user?: string;
+  password?: string;
+  database?: string;
   max: number;
   idleTimeoutMillis: number;
   connectionTimeoutMillis: number;
 }
 
-const dbConfig: DatabaseConfig = {
-  host: process.env.DB_HOST ?? "localhost",
-  port: Number(process.env.DB_PORT ?? 5432),
-  user: process.env.DB_USER ?? "postgres",
-  password: process.env.DB_PASSWORD ?? "postgres",
-  database: process.env.DB_NAME ?? "geotag_images",
-  max: 10, // Maximum number of clients in the pool
-  idleTimeoutMillis: 30000, // Close idle clients after 30 seconds
-  connectionTimeoutMillis: 60000, // Return an error after 60 seconds if connection cannot be established
-};
+// Function to get database config (evaluated at runtime, not module load time)
+function getDbConfig(): DatabaseConfig {
+  // Prefer connection string (works better with Supabase pooler)
+  // Remove sslmode from connection string and handle SSL separately
+  let connectionString = process.env.POSTGRES_URL;
+  if (connectionString) {
+    connectionString = connectionString.replace(/[?&]sslmode=[^&]+/, "");
+    connectionString = connectionString.replace(/\?$/, ""); // Remove trailing ?
+  }
+
+  return connectionString
+    ? {
+        connectionString,
+        max: 10,
+        idleTimeoutMillis: 30000,
+        connectionTimeoutMillis: 60000,
+        ssl: {
+          rejectUnauthorized: false, // Required for Supabase in development
+        },
+      }
+    : {
+        host: process.env.POSTGRES_HOST ?? process.env.DB_HOST ?? "localhost",
+        port: Number(process.env.DB_PORT ?? 5432),
+        user: process.env.POSTGRES_USER ?? process.env.DB_USER ?? "postgres",
+        password:
+          process.env.POSTGRES_PASSWORD ??
+          process.env.DB_PASSWORD ??
+          "postgres",
+        database:
+          process.env.POSTGRES_DATABASE ?? process.env.DB_NAME ?? "postgres",
+        max: 10,
+        idleTimeoutMillis: 30000,
+        connectionTimeoutMillis: 60000,
+        ssl: {
+          rejectUnauthorized: false, // Required for Supabase in development
+        },
+      };
+}
 
 class Database {
   private pool: Pool | null = null;
 
   async connect(): Promise<Pool> {
     try {
+      const dbConfig = getDbConfig(); // Get config at runtime
+
+      console.log("🔄 Connecting to database...");
+      console.log(
+        "  Using:",
+        dbConfig.connectionString ? "Connection String" : "Host/Port"
+      );
+      if (!dbConfig.connectionString) {
+        console.log("  Host:", dbConfig.host);
+        console.log("  Port:", dbConfig.port);
+        console.log("  Database:", dbConfig.database);
+      }
+
       this.pool = new Pool(dbConfig);
 
       // Test the connection
@@ -52,7 +94,7 @@ class Database {
       const pgSql = sql.replace(/\?/g, () => `$${paramIndex++}`);
 
       const result: QueryResult = await this.pool.query(pgSql, params);
-      
+
       // For INSERT queries, return an object with insertId (PostgreSQL uses RETURNING)
       if (sql.trim().toUpperCase().startsWith("INSERT")) {
         return {
@@ -61,7 +103,7 @@ class Database {
           rows: result.rows,
         };
       }
-      
+
       // For SELECT queries, return rows array
       return result.rows;
     } catch (error) {
@@ -79,4 +121,4 @@ class Database {
 }
 
 export const database = new Database();
-export { Database, dbConfig };
+export { Database };
