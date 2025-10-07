@@ -6,6 +6,8 @@ export interface MapMarker {
   description?: string;
   imageUrl: string;
   imageAlt?: string;
+  category?: string;
+  reportDescription?: string;
 }
 
 export interface MapData {

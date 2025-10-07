@@ -25,6 +25,8 @@ export default function CameraCapture({
   } | null>(null);
   const [isGettingLocation, setIsGettingLocation] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [category, setCategory] = useState<string>("");
+  const [reportDescription, setReportDescription] = useState<string>("");
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const streamRef = useRef<MediaStream | null>(null);
@@ -107,10 +109,12 @@ export default function CameraCapture({
       id: `report-${Date.now()}`,
       latitude: location.latitude,
       longitude: location.longitude,
-      title: `Location Report #${Date.now().toString().slice(-6)}`,
+      title: category || `Location Report #${Date.now().toString().slice(-6)}`,
       description: `Submitted by field operator on ${new Date().toLocaleString()}`,
       imageUrl: capturedImage, // In real app, this would be uploaded to server
       imageAlt: "Field documentation - geographic location",
+      category: category || undefined,
+      reportDescription: reportDescription || undefined,
     };
 
     // Add to map
@@ -119,15 +123,19 @@ export default function CameraCapture({
     // Reset state
     setCapturedImage(null);
     setLocation(null);
+    setCategory("");
+    setReportDescription("");
     
     // Show success modal
     setShowSuccessModal(true);
-  }, [capturedImage, location, onNewMarker]);
+  }, [capturedImage, location, category, reportDescription, onNewMarker]);
 
   const handleCancel = useCallback(() => {
     stopCamera();
     setCapturedImage(null);
     setLocation(null);
+    setCategory("");
+    setReportDescription("");
     onClose();
   }, [stopCamera, onClose]);
 
@@ -270,6 +278,55 @@ export default function CameraCapture({
                 </div>
               </div>
             )}
+
+            {/* Category Selector */}
+            <div className="mb-4">
+              <label htmlFor="category" className="block text-sm font-semibold text-gray-700 mb-2">
+                {t.cameraCategoryLabel}
+              </label>
+              <select
+                id="category"
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              >
+                <option value="">{t.cameraCategoryPlaceholder}</option>
+                <option value={t.categoryLighting}>{t.categoryLighting}</option>
+                <option value={t.categoryNoise}>{t.categoryNoise}</option>
+                <option value={t.categoryBikePath}>{t.categoryBikePath}</option>
+                <option value={t.categoryWell}>{t.categoryWell}</option>
+                <option value={t.categoryStreetMaintenance}>{t.categoryStreetMaintenance}</option>
+                <option value={t.categoryPothole}>{t.categoryPothole}</option>
+                <option value={t.categoryGrass}>{t.categoryGrass}</option>
+                <option value={t.categoryGraffiti}>{t.categoryGraffiti}</option>
+                <option value={t.categoryPlayground}>{t.categoryPlayground}</option>
+                <option value={t.categoryExerciseTrail}>{t.categoryExerciseTrail}</option>
+                <option value={t.categoryLittering}>{t.categoryLittering}</option>
+                <option value={t.categoryTrashBins}>{t.categoryTrashBins}</option>
+                <option value={t.categorySandGravel}>{t.categorySandGravel}</option>
+                <option value={t.categorySignsRoadMarks}>{t.categorySignsRoadMarks}</option>
+                <option value={t.categoryTrafficSignals}>{t.categoryTrafficSignals}</option>
+                <option value={t.categoryTreesShrubs}>{t.categoryTreesShrubs}</option>
+                <option value={t.categoryOutdoorGym}>{t.categoryOutdoorGym}</option>
+                <option value={t.categoryWinterRoadMaintenance}>{t.categoryWinterRoadMaintenance}</option>
+                <option value={t.categoryRoadwork}>{t.categoryRoadwork}</option>
+              </select>
+            </div>
+
+            {/* Description Textarea */}
+            <div className="mb-4">
+              <label htmlFor="description" className="block text-sm font-semibold text-gray-700 mb-2">
+                {t.cameraDescriptionLabel}
+              </label>
+              <textarea
+                id="description"
+                value={reportDescription}
+                onChange={(e) => setReportDescription(e.target.value)}
+                placeholder={t.cameraDescriptionPlaceholder}
+                rows={4}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+              />
+            </div>
 
             <div className="flex gap-3">
               <button

@@ -1,6 +1,7 @@
 import express, { Request, Response } from "express";
 import multer from "multer";
 import { Image } from "../models/Image";
+import { Category } from "../models/Category";
 import { ImageResponse } from "../types";
 
 const router: express.Router = express.Router();
@@ -25,7 +26,7 @@ router.post("/upload", upload.single("image"), async (req, res) => {
       return;
     }
 
-    const { latitude, longitude } = req.body;
+    const { latitude, longitude, category, description } = req.body;
     let coords = {
       latitude: undefined as number | undefined,
       longitude: undefined as number | undefined,
@@ -35,6 +36,15 @@ router.post("/upload", upload.single("image"), async (req, res) => {
     if (latitude && longitude) {
       coords.latitude = parseFloat(latitude);
       coords.longitude = parseFloat(longitude);
+    }
+
+    // Look up category ID if category name is provided
+    let categoryId: number | undefined = undefined;
+    if (category) {
+      const categoryRecord = await Category.findByName(category);
+      if (categoryRecord) {
+        categoryId = categoryRecord.id;
+      }
     }
 
     // Create unique filename
@@ -50,9 +60,22 @@ router.post("/upload", upload.single("image"), async (req, res) => {
       imageData: req.file.buffer,
       latitude: coords.latitude,
       longitude: coords.longitude,
+      categoryId: categoryId,
+      description: description || undefined,
     });
 
     await image.save();
+
+    // Get category names if category was set
+    let categoryNameEn: string | undefined;
+    let categoryNameSv: string | undefined;
+    if (categoryId) {
+      const cat = await Category.findById(categoryId);
+      if (cat) {
+        categoryNameEn = cat.name_en;
+        categoryNameSv = cat.name_sv;
+      }
+    }
 
     const response: ImageResponse = {
       id: image.id!,
@@ -62,6 +85,10 @@ router.post("/upload", upload.single("image"), async (req, res) => {
       fileSize: image.fileSize,
       latitude: image.latitude,
       longitude: image.longitude,
+      categoryId: image.categoryId,
+      categoryNameEn: categoryNameEn,
+      categoryNameSv: categoryNameSv,
+      description: image.description,
       uploadTimestamp: image.uploadTimestamp!,
     };
 
@@ -94,6 +121,10 @@ router.get("/", async (req: Request, res: Response) => {
       fileSize: img.file_size,
       latitude: img.latitude,
       longitude: img.longitude,
+      categoryId: img.category_id,
+      categoryNameEn: img.category_name_en,
+      categoryNameSv: img.category_name_sv,
+      description: img.description,
       uploadTimestamp: img.upload_timestamp,
     }));
 
@@ -163,6 +194,10 @@ router.get("/:id", async (req: Request, res: Response) => {
       fileSize: image.file_size,
       latitude: image.latitude,
       longitude: image.longitude,
+      categoryId: image.category_id,
+      categoryNameEn: image.category_name_en,
+      categoryNameSv: image.category_name_sv,
+      description: image.description,
       uploadTimestamp: image.upload_timestamp,
     });
   } catch (error) {

@@ -74,6 +74,31 @@ export interface Translations {
   cameraLongitude: string;
   cameraCancelAction: string;
   cameraSubmitReport: string;
+  cameraCategoryLabel: string;
+  cameraCategoryPlaceholder: string;
+  cameraDescriptionLabel: string;
+  cameraDescriptionPlaceholder: string;
+
+  // Report Categories
+  categoryLighting: string;
+  categoryNoise: string;
+  categoryBikePath: string;
+  categoryWell: string;
+  categoryStreetMaintenance: string;
+  categoryPothole: string;
+  categoryGrass: string;
+  categoryGraffiti: string;
+  categoryPlayground: string;
+  categoryExerciseTrail: string;
+  categoryLittering: string;
+  categoryTrashBins: string;
+  categorySandGravel: string;
+  categorySignsRoadMarks: string;
+  categoryTrafficSignals: string;
+  categoryTreesShrubs: string;
+  categoryOutdoorGym: string;
+  categoryWinterRoadMaintenance: string;
+  categoryRoadwork: string;
 
   // Success Modal
   successModalTitle: string;
@@ -171,6 +196,32 @@ export const translations: Record<Language, Translations> = {
     cameraLongitude: "Longitude:",
     cameraCancelAction: "Cancel",
     cameraSubmitReport: "Submit Report",
+    cameraCategoryLabel: "Category",
+    cameraCategoryPlaceholder: "Select a category",
+    cameraDescriptionLabel: "Description (Optional)",
+    cameraDescriptionPlaceholder:
+      "Describe the issue in detail. Include street name, number, and any relevant information...",
+
+    // Report Categories
+    categoryLighting: "Lighting",
+    categoryNoise: "Noise",
+    categoryBikePath: "Bike Path",
+    categoryWell: "Well",
+    categoryStreetMaintenance: "Street Maintenance",
+    categoryPothole: "Pothole",
+    categoryGrass: "Grass",
+    categoryGraffiti: "Graffiti",
+    categoryPlayground: "Playground",
+    categoryExerciseTrail: "Exercise Trail",
+    categoryLittering: "Littering",
+    categoryTrashBins: "Trash Bins",
+    categorySandGravel: "Sand and Gravel",
+    categorySignsRoadMarks: "Signs and Road Marks",
+    categoryTrafficSignals: "Traffic Signals",
+    categoryTreesShrubs: "Trees and Shrubs",
+    categoryOutdoorGym: "Outdoor Gym",
+    categoryWinterRoadMaintenance: "Winter Road Maintenance",
+    categoryRoadwork: "Roadwork",
 
     // Success Modal
     successModalTitle: "Report Submitted Successfully!",
@@ -268,6 +319,32 @@ export const translations: Record<Language, Translations> = {
     cameraLongitude: "Longitud:",
     cameraCancelAction: "Avbryt",
     cameraSubmitReport: "Skicka Rapport",
+    cameraCategoryLabel: "Kategori",
+    cameraCategoryPlaceholder: "Välj en kategori",
+    cameraDescriptionLabel: "Beskrivning (Valfritt)",
+    cameraDescriptionPlaceholder:
+      "Beskriv felet så utförligt som möjligt. Ange gatunamn, nummer och annan relevant information...",
+
+    // Report Categories
+    categoryLighting: "Belysning",
+    categoryNoise: "Buller",
+    categoryBikePath: "Cykelbana",
+    categoryWell: "Brunn",
+    categoryStreetMaintenance: "Gatuunderhåll",
+    categoryPothole: "Hål i gatan",
+    categoryGrass: "Gräs",
+    categoryGraffiti: "Klotter",
+    categoryPlayground: "Lekplats",
+    categoryExerciseTrail: "Motionsspår",
+    categoryLittering: "Nedskräpning",
+    categoryTrashBins: "Papperskorgar",
+    categorySandGravel: "Sand och grus",
+    categorySignsRoadMarks: "Skyltar och vägmärken",
+    categoryTrafficSignals: "Trafiksignaler",
+    categoryTreesShrubs: "Träd och buskar",
+    categoryOutdoorGym: "Utegym",
+    categoryWinterRoadMaintenance: "Vinterväghållning",
+    categoryRoadwork: "Vägarbeten",
 
     // Success Modal
     successModalTitle: "Rapporten Har Skickats!",

@@ -10,6 +10,8 @@ interface ImageData {
   imageData: Uint8Array;
   latitude?: number;
   longitude?: number;
+  categoryId?: number;
+  description?: string;
   uploadTimestamp?: Date;
 }
 
@@ -22,6 +24,8 @@ export class Image {
   public imageData: Uint8Array;
   public latitude?: number;
   public longitude?: number;
+  public categoryId?: number;
+  public description?: string;
   public uploadTimestamp?: Date;
 
   constructor(data: ImageData) {
@@ -33,6 +37,8 @@ export class Image {
     this.imageData = data.imageData;
     this.latitude = data.latitude;
     this.longitude = data.longitude;
+    this.categoryId = data.categoryId;
+    this.description = data.description;
     this.uploadTimestamp = data.uploadTimestamp;
   }
 
@@ -44,16 +50,16 @@ export class Image {
       throw new Error("Invalid file size");
     }
 
-    let latValue = 'NULL';
-    let lngValue = 'NULL';
-    
+    let latValue = "NULL";
+    let lngValue = "NULL";
+
     if (this.latitude != null) {
       const lat = parseFloat(this.latitude.toString());
       if (!isNaN(lat)) {
         latValue = lat.toString();
       }
     }
-    
+
     if (this.longitude != null) {
       const lng = parseFloat(this.longitude.toString());
       if (!isNaN(lng)) {
@@ -61,9 +67,17 @@ export class Image {
       }
     }
 
+    let categoryValue = "NULL";
+    if (this.categoryId != null) {
+      const catId = parseInt(this.categoryId.toString(), 10);
+      if (!isNaN(catId)) {
+        categoryValue = catId.toString();
+      }
+    }
+
     const sql = `
-            INSERT INTO images (filename, original_filename, mime_type, file_size, image_data, latitude, longitude)
-            VALUES (?, ?, ?, ${fileSize}, ?, ${latValue}, ${lngValue})
+            INSERT INTO images (filename, original_filename, mime_type, file_size, image_data, latitude, longitude, category_id, description)
+            VALUES (?, ?, ?, ${fileSize}, ?, ${latValue}, ${lngValue}, ${categoryValue}, ?)
         `;
 
     const params = [
@@ -71,6 +85,7 @@ export class Image {
       this.originalFilename,
       this.mimeType,
       this.imageData,
+      this.description || null,
     ];
 
     const result = await database.query(sql, params);
@@ -99,18 +114,27 @@ export class Image {
     const westNum = parseFloat(west.toString());
     const eastNum = parseFloat(east.toString());
 
-    if (isNaN(southNum) || isNaN(northNum) || isNaN(westNum) || isNaN(eastNum)) {
+    if (
+      isNaN(southNum) ||
+      isNaN(northNum) ||
+      isNaN(westNum) ||
+      isNaN(eastNum)
+    ) {
       throw new Error("Invalid bounds parameters");
     }
 
     const sql = `
-            SELECT id, filename, original_filename, latitude, longitude, upload_timestamp
-            FROM images
-            WHERE latitude BETWEEN ${southNum} AND ${northNum}
-              AND longitude BETWEEN ${westNum} AND ${eastNum}
-              AND latitude IS NOT NULL
-              AND longitude IS NOT NULL
-            ORDER BY upload_timestamp DESC
+            SELECT 
+              i.id, i.filename, i.original_filename, i.latitude, i.longitude, 
+              i.category_id, i.description, i.upload_timestamp,
+              c.name_en as category_name_en, c.name_sv as category_name_sv
+            FROM images i
+            LEFT JOIN categories c ON i.category_id = c.id
+            WHERE i.latitude BETWEEN ${southNum} AND ${northNum}
+              AND i.longitude BETWEEN ${westNum} AND ${eastNum}
+              AND i.latitude IS NOT NULL
+              AND i.longitude IS NOT NULL
+            ORDER BY i.upload_timestamp DESC
         `;
 
     return await database.query(sql);
@@ -119,10 +143,14 @@ export class Image {
   // Get all images with coordinates (for heatmap)
   static async getAllWithCoordinates(): Promise<ImageRow[]> {
     const sql = `
-            SELECT id, filename, latitude, longitude, upload_timestamp
-            FROM images
-            WHERE latitude IS NOT NULL AND longitude IS NOT NULL
-            ORDER BY upload_timestamp DESC
+            SELECT 
+              i.id, i.filename, i.latitude, i.longitude, 
+              i.category_id, i.description, i.upload_timestamp,
+              c.name_en as category_name_en, c.name_sv as category_name_sv
+            FROM images i
+            LEFT JOIN categories c ON i.category_id = c.id
+            WHERE i.latitude IS NOT NULL AND i.longitude IS NOT NULL
+            ORDER BY i.upload_timestamp DESC
         `;
 
     return await database.query(sql);
@@ -136,7 +164,7 @@ export class Image {
     // Ensure parameters are integers
     const limitInt = parseInt(limit.toString(), 10);
     const offsetInt = parseInt(offset.toString(), 10);
-    
+
     const sql = `
             SELECT * FROM images
             ORDER BY upload_timestamp DESC

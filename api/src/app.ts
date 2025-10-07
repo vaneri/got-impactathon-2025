@@ -6,6 +6,7 @@ import path from "path";
 import { database } from "./config/database";
 import imageRoutes from "./routes/imageRoutes";
 import heatmapRoutes from "./routes/heatmapRoutes";
+import categoryRoutes from "./routes/categoryRoutes";
 
 const app: express.Application = express();
 const PORT = process.env.PORT || 3000;
@@ -29,6 +30,7 @@ app.get("/health", (req, res) => {
 // API routes
 app.use("/api/images", imageRoutes);
 app.use("/api/heatmap", heatmapRoutes);
+app.use("/api/categories", categoryRoutes);
 
 // Root endpoint
 app.get("/", (req, res) => {
