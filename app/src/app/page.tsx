@@ -5,6 +5,7 @@ import InteractiveMap from "../components/InteractiveMap";
 import ImageModal from "../components/ImageModal";
 import CameraCapture from "../components/CameraCapture";
 import { MapData, MapMarker, MapDataService } from "../types/map";
+import { Language, translations } from "../locales/translations";
 
 export default function Home() {
   const [mapData, setMapData] = useState<MapData | null>(null);
@@ -12,6 +13,7 @@ export default function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isCameraOpen, setIsCameraOpen] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [language, setLanguage] = useState<Language>('en');
 
   useEffect(() => {
     const loadMapData = async () => {
@@ -55,6 +57,12 @@ export default function Home() {
     setIsCameraOpen(false);
   };
 
+  const toggleLanguage = () => {
+    setLanguage(prev => prev === 'en' ? 'sv' : 'en');
+  };
+
+  const t = translations[language];
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
@@ -94,19 +102,20 @@ export default function Home() {
       {/* Header */}
       <header className="gov-header">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 md:py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-2 md:space-x-4">
+          <div className="flex items-center justify-between gap-3">
+            {/* Left Section - Logo and Title */}
+            <div className="flex items-center space-x-2 md:space-x-4 flex-1 min-w-0">
               <div className="w-12 h-12 md:w-14 md:h-14 bg-white rounded-lg flex items-center justify-center shadow-lg flex-shrink-0">
                 <svg className="w-7 h-7 md:w-9 md:h-9 text-blue-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
-                  </svg>
-                </div>
-              <div className="min-w-0">
-                <h1 className="text-lg md:text-2xl lg:text-3xl font-bold mb-0.5 md:mb-1 truncate" style={{color: '#ffffff'}}>
-                  Gothenburg FaultReport
+                </svg>
+              </div>
+              <div className="min-w-0 flex-1 max-w-md lg:max-w-lg">
+                <h1 className="text-base md:text-xl lg:text-2xl font-bold mb-0.5 md:mb-1 truncate" style={{color: '#ffffff'}}>
+                  {t.appTitle}
                 </h1>
-                <p className="text-xs md:text-sm font-medium hidden sm:block" style={{color: '#bfdbfe'}}>
-                  Fault Reporting - Streets, Squares & Parks
+                <p className="text-xs md:text-sm font-medium hidden sm:block truncate" style={{color: '#bfdbfe'}}>
+                  {t.appSubtitle}
                 </p>
                 <div className="flex items-center space-x-2 mt-1 md:mt-2">
                   <div className="env-badge flex items-center space-x-1 px-2 md:px-3 py-0.5 md:py-1 rounded-full" style={{
@@ -116,14 +125,38 @@ export default function Home() {
                     <svg className="w-3 h-3 md:w-4 md:h-4 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20" style={{color: '#dcfce7'}}>
                       <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM4.332 8.027a6.012 6.012 0 011.912-2.706C6.512 5.73 6.974 6 7.5 6A1.5 1.5 0 019 7.5V8a2 2 0 004 0 2 2 0 011.523-1.943A5.977 5.977 0 0116 10c0 .34-.028.675-.083 1H15a2 2 0 00-2 2v2.197A5.973 5.973 0 0110 16v-2a2 2 0 00-2-2 2 2 0 01-2-2 2 2 0 00-1.668-1.973z" clipRule="evenodd" />
                     </svg>
-                    <span className="env-badge-text text-[10px] md:text-xs font-semibold whitespace-nowrap" style={{color: '#dcfce7'}}>Eco-Friendly</span>
-            </div>
+                    <span className="env-badge-text text-[10px] md:text-xs font-semibold whitespace-nowrap" style={{color: '#dcfce7'}}>
+                      <span className="hidden sm:inline">{t.ecoBadge}</span>
+                      <span className="sm:hidden">{t.ecoBadgeMobile}</span>
+                    </span>
+                  </div>
+                </div>
               </div>
-              </div>
             </div>
-            <div className="text-right flex-shrink-0">
-              <div className="text-xs md:text-sm font-medium" style={{color: '#bfdbfe'}}>Platform</div>
-              <div className="font-semibold text-sm md:text-lg" style={{color: '#ffffff'}}>{new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</div>
+
+            {/* Right Section - Language Switcher and Date */}
+            <div className="flex items-center gap-2 md:gap-3 flex-shrink-0">
+              {/* Language Switcher */}
+              <button
+                onClick={toggleLanguage}
+                className="flex items-center gap-1 px-2 md:px-3 py-1.5 md:py-2 rounded-lg transition-all duration-200 hover:bg-blue-800"
+                style={{
+                  backgroundColor: 'rgba(30, 64, 175, 0.3)',
+                  border: '1px solid rgba(191, 219, 254, 0.3)'
+                }}
+                title={language === 'en' ? 'Switch to Svenska' : 'Switch to English'}
+              >
+                <svg className="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" style={{color: '#bfdbfe'}}>
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" />
+                </svg>
+                <span className="text-sm md:text-base font-bold" style={{color: '#ffffff'}}>{language === 'en' ? 'EN' : 'SV'}</span>
+              </button>
+
+              {/* Date and Platform Label */}
+              <div className="text-right hidden md:block">
+                <div className="text-xs font-medium" style={{color: '#bfdbfe'}}>{t.platformLabel}</div>
+                <div className="font-semibold text-sm" style={{color: '#ffffff'}}>{new Date().toLocaleDateString(language === 'en' ? 'en-US' : 'sv-SE', { month: 'short', day: 'numeric' })}</div>
+              </div>
             </div>
           </div>
         </div>
@@ -135,20 +168,19 @@ export default function Home() {
         <div className="gov-card p-4 md:p-6 mb-8 relative">
           <div className="mb-4 md:mb-6">
             <h2 className="text-lg md:text-2xl lg:text-3xl font-bold text-gray-900 mb-2">
-              Fault Reporting - Streets, Squares and Parks
+              {t.mapTitle}
               </h2>
             <p className="text-gray-600 text-xs md:text-sm lg:text-base leading-relaxed mb-3">
-              Report holes in streets or bike paths, broken street lights, overgrown bushes, damaged benches, or any infrastructure issues. 
-              Your report becomes an official public document and helps us maintain our community.
+              {t.mapDescription}
             </p>
             <div className="bg-red-50 border-l-4 border-red-500 p-3 mb-3">
               <p className="text-xs md:text-sm text-red-800">
-                <strong>Emergency?</strong> For urgent issues, call the City immediately at <a href="tel:031-36500000" className="font-bold underline">031-365 00 00</a>
+                <strong>{t.emergencyLabel}</strong> {t.emergencyText} <a href="tel:031-36500000" className="font-bold underline">031-365 00 00</a>
               </p>
             </div>
             <div className="flex items-center space-x-2">
-              <span className="status-badge status-active text-[10px] md:text-xs">Live Data</span>
-              <span className="text-xs md:text-sm text-gray-500">Updated: {new Date().toLocaleTimeString()}</span>
+              <span className="status-badge status-active text-[10px] md:text-xs">{t.liveData}</span>
+              <span className="text-xs md:text-sm text-gray-500">{t.updated}: {new Date().toLocaleTimeString()}</span>
             </div>
           </div>
           <div className="rounded-lg overflow-hidden border border-gray-200 shadow-sm h-[400px] md:h-[500px] lg:h-[600px]">
@@ -223,9 +255,9 @@ export default function Home() {
               </svg>
             </div>
             <div className="flex-1">
-              <h3 className="text-lg md:text-xl font-bold text-gray-900 mb-2">Your Report Becomes a Public Document</h3>
+              <h3 className="text-lg md:text-xl font-bold text-gray-900 mb-2">{t.publicDocTitle}</h3>
               <p className="text-gray-700 leading-relaxed text-sm md:text-base mb-3">
-                When you submit a report, it is registered as an official public document. All citizens have the right to access and read public documents under Sweden's principle of public access to information (<em>offentlighetsprincipen</em>).
+                {t.publicDocDescription}
               </p>
               <div className="grid grid-cols-1 gap-3 mt-3">
                 <div className="bg-white rounded-lg p-3 md:p-4 border border-blue-200">
@@ -234,8 +266,8 @@ export default function Home() {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                     <div className="flex-1">
-                      <h4 className="font-semibold text-gray-900 mb-1 text-sm md:text-base">Optional Contact Information</h4>
-                      <p className="text-xs md:text-sm text-gray-600">You can choose to remain anonymous. However, without contact details, we cannot ask follow-up questions or update you on progress.</p>
+                      <h4 className="font-semibold text-gray-900 mb-1 text-sm md:text-base">{t.contactInfoTitle}</h4>
+                      <p className="text-xs md:text-sm text-gray-600">{t.contactInfoDescription}</p>
                     </div>
                   </div>
                 </div>
@@ -245,8 +277,8 @@ export default function Home() {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                     </svg>
                     <div className="flex-1">
-                      <h4 className="font-semibold text-gray-900 mb-1 text-sm md:text-base">Data Protection</h4>
-                      <p className="text-xs md:text-sm text-gray-600">We process your personal data in accordance with GDPR and Swedish law. Learn more about how we handle your information.</p>
+                      <h4 className="font-semibold text-gray-900 mb-1 text-sm md:text-base">{t.dataProtectionTitle}</h4>
+                      <p className="text-xs md:text-sm text-gray-600">{t.dataProtectionDescription}</p>
                     </div>
                   </div>
                 </div>
@@ -258,7 +290,7 @@ export default function Home() {
         {/* What You Can Report */}
         <div className="gov-card p-8">
           <h3 className="text-2xl font-bold text-gray-800 mb-6">
-            What You Can Report
+            {t.whatToReportTitle}
           </h3>
           <div className="grid md:grid-cols-4 gap-6">
             <div className="border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow">
@@ -268,10 +300,10 @@ export default function Home() {
                 </svg>
               </div>
               <h4 className="font-semibold text-gray-800 mb-2 text-lg">
-                Roads & Paths
+                {t.roadsTitle}
               </h4>
               <p className="text-gray-600 text-sm">
-                Holes in streets, damaged bike paths, broken sidewalks, or paving issues. Include exact address or coordinates.
+                {t.roadsDescription}
               </p>
             </div>
 
@@ -282,10 +314,10 @@ export default function Home() {
                 </svg>
               </div>
               <h4 className="font-semibold text-gray-800 mb-2 text-lg">
-                Street Lighting
+                {t.lightingTitle}
               </h4>
               <p className="text-gray-600 text-sm">
-                Lights that are not working, flickering, or damaged. Provide location and light pole number if available.
+                {t.lightingDescription}
               </p>
             </div>
 
@@ -296,10 +328,10 @@ export default function Home() {
                 </svg>
               </div>
               <h4 className="font-semibold text-gray-800 mb-2 text-lg">
-                Parks & Green Spaces
+                {t.parksTitle}
               </h4>
               <p className="text-gray-600 text-sm">
-                Overgrown bushes that need cutting, damaged benches, broken playground equipment, or maintenance issues.
+                {t.parksDescription}
               </p>
             </div>
 
@@ -310,32 +342,32 @@ export default function Home() {
                 </svg>
               </div>
               <h4 className="font-semibold text-gray-800 mb-2 text-lg">
-                Public Spaces
+                {t.publicSpacesTitle}
               </h4>
               <p className="text-gray-600 text-sm">
-                Issues in squares, public furniture damage, graffiti, or general maintenance needed in shared areas.
+                {t.publicSpacesDescription}
               </p>
             </div>
           </div>
 
           <div className="mt-8 p-6 bg-blue-50 rounded-lg border border-blue-200">
-            <h4 className="text-lg font-bold text-gray-900 mb-3">📝 How to Submit a Good Report</h4>
+            <h4 className="text-lg font-bold text-gray-900 mb-3">{t.howToReportTitle}</h4>
             <div className="grid md:grid-cols-2 gap-4 text-sm">
               <div className="flex items-start space-x-2">
                 <span className="text-blue-600 font-bold mt-0.5">1.</span>
-                <p className="text-gray-700"><strong>Be Specific:</strong> Describe the fault in detail. Instead of "broken light," write "street light not working on Main Street between 5th and 6th Avenue."</p>
+                <p className="text-gray-700">{t.howToStep1}</p>
               </div>
               <div className="flex items-start space-x-2">
                 <span className="text-blue-600 font-bold mt-0.5">2.</span>
-                <p className="text-gray-700"><strong>Provide Location:</strong> Include exact address (street name and number) or GPS coordinates so we can find and fix the issue quickly.</p>
+                <p className="text-gray-700">{t.howToStep2}</p>
               </div>
               <div className="flex items-start space-x-2">
                 <span className="text-blue-600 font-bold mt-0.5">3.</span>
-                <p className="text-gray-700"><strong>Add Photos:</strong> Take clear photos showing the problem. Multiple angles help our teams understand the situation better.</p>
+                <p className="text-gray-700">{t.howToStep3}</p>
               </div>
               <div className="flex items-start space-x-2">
                 <span className="text-blue-600 font-bold mt-0.5">4.</span>
-                <p className="text-gray-700"><strong>Include Contact Info:</strong> Optional but recommended. We can update you on progress and ask questions if needed.</p>
+                <p className="text-gray-700">{t.howToStep4}</p>
               </div>
             </div>
           </div>
@@ -343,8 +375,8 @@ export default function Home() {
           <div className="mt-8 pt-8 border-t border-gray-200">
             <div className="flex items-center justify-between flex-wrap gap-4">
               <div>
-                <p className="text-sm text-gray-600">Platform Version 1.0.0</p>
-                <p className="text-xs text-gray-500">© 2025 Gothenburg CityReport. City of Gothenburg.</p>
+                <p className="text-sm text-gray-600">{t.platformVersion}</p>
+                <p className="text-xs text-gray-500">{t.copyright}</p>
                 <div className="flex items-center space-x-3 mt-2">
                   <div className="flex items-center space-x-1 text-xs text-green-600">
                     <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
@@ -381,13 +413,13 @@ export default function Home() {
             boxShadow: '0 10px 25px -5px rgba(30, 64, 175, 0.5), 0 8px 10px -6px rgba(30, 64, 175, 0.3)',
             zIndex: 9999
           }}
-          title="Report Fault"
-          aria-label="Report new fault or issue"
+          title={t.reportButtonTitle}
+          aria-label={t.reportButtonAria}
         >
           <svg className="w-6 h-6 md:w-8 md:h-8 lg:w-10 lg:h-10 text-white mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
           </svg>
-          <span className="text-[9px] md:text-[10px] lg:text-xs text-white font-semibold uppercase tracking-wide">Report</span>
+          <span className="text-[9px] md:text-[10px] lg:text-xs text-white font-semibold uppercase tracking-wide">{t.reportButton}</span>
           
           {/* Pulse animation ring */}
           <span className="absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75 animate-ping group-hover:opacity-0"></span>
