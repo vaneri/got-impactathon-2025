@@ -1,10 +1,8 @@
 import { NextResponse } from "next/server";
 
-export async function GET(
-  _request: Request,
-  { params }: { params: { filename: string } }
-) {
+export async function GET(_request: Request, context: unknown) {
   try {
+    const { params } = context as { params: { filename: string } };
     const filename = params.filename;
 
     // Find image by filename
