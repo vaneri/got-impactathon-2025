@@ -102,7 +102,7 @@ class Database {
 
       const result: QueryResult = await this.pool!.query(
         pgSql,
-        params as any[]
+        params as unknown[]
       );
 
       // For INSERT queries, return an object with insertId (PostgreSQL uses RETURNING)
