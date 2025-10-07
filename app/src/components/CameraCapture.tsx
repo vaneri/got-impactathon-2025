@@ -93,18 +93,18 @@ export default function CameraCapture({
     );
   }, []);
 
-  const saveTrashReport = useCallback(() => {
+  const saveLocationReport = useCallback(() => {
     if (!capturedImage || !location) return;
 
     // Mock storage - replace with actual API call later
     const newMarker: MapMarker = {
-      id: `user-${Date.now()}`,
+      id: `report-${Date.now()}`,
       latitude: location.latitude,
       longitude: location.longitude,
-      title: `New Trash Spot 🤢`,
-      description: `Reported by user at ${new Date().toLocaleString()}`,
+      title: `Location Report #${Date.now().toString().slice(-6)}`,
+      description: `Submitted by field operator on ${new Date().toLocaleString()}`,
       imageUrl: capturedImage, // In real app, this would be uploaded to server
-      imageAlt: "User-reported trash location",
+      imageAlt: "Field documentation - geographic location",
     };
 
     // Add to map
@@ -117,7 +117,7 @@ export default function CameraCapture({
 
     // Show success message
     alert(
-      "🌟 Trash location reported! Thanks for helping make the world sparkle! ✨"
+      "Report submitted successfully. Your data has been recorded in the system."
     );
   }, [capturedImage, location, onNewMarker, onClose]);
 
@@ -129,100 +129,145 @@ export default function CameraCapture({
   }, [stopCamera, onClose]);
 
   return (
-    <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black bg-opacity-75">
-      <div className="ice-cream-bg rounded-3xl p-6 m-4 max-w-md w-full border-4 border-white sparkle">
-        <h2 className="text-2xl font-bold text-gray-800 mb-4 text-center">
-          📸 Report Trash Location! 🗑️
-        </h2>
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black bg-opacity-60 backdrop-blur-sm">
+      <div className="bg-white rounded-lg p-6 m-4 max-w-md w-full shadow-2xl border border-gray-200">
+        <div className="flex items-center justify-between mb-4 pb-4 border-b border-gray-200">
+          <div className="flex items-center space-x-3">
+            <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+              <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+            </div>
+            <h2 className="text-xl font-bold text-gray-900">
+              Submit Location Report
+            </h2>
+          </div>
+          <button
+            onClick={handleCancel}
+            className="text-gray-400 hover:text-gray-600 transition-colors"
+          >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
 
         {!isCapturing && !capturedImage && (
           <div className="text-center">
-            <p className="text-gray-700 mb-6">
-              🌟 Help make the world sparkle by reporting trash! We'll capture a
-              photo and your location. ✨
+            <p className="text-gray-600 mb-6 leading-relaxed">
+              Capture visual documentation with geographic coordinates for official records and analysis.
             </p>
             <button
               onClick={startCamera}
-              className="lollipop-btn text-white px-6 py-3 rounded-full font-bold hover:scale-105 transition-all duration-300 mb-3"
+              className="gov-btn-primary w-full mb-3 flex items-center justify-center space-x-2"
             >
-              📷 Start Camera
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+              </svg>
+              <span>Activate Camera</span>
             </button>
-            <br />
             <button
               onClick={handleCancel}
-              className="text-gray-600 underline hover:text-gray-800"
+              className="text-gray-500 text-sm hover:text-gray-700 transition-colors"
             >
-              Cancel
+              Cancel Operation
             </button>
           </div>
         )}
 
         {isCapturing && (
           <div className="text-center">
-            <video
-              ref={videoRef}
-              autoPlay
-              playsInline
-              className="w-full rounded-2xl mb-4 border-2 border-white"
-            />
+            <div className="relative mb-4">
+              <video
+                ref={videoRef}
+                autoPlay
+                playsInline
+                className="w-full rounded-lg border border-gray-300"
+              />
+              <div className="absolute top-2 right-2 bg-red-500 text-white text-xs px-2 py-1 rounded flex items-center space-x-1">
+                <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
+                <span>RECORDING</span>
+              </div>
+            </div>
             <button
               onClick={capturePhoto}
-              className="lollipop-btn text-white px-6 py-3 rounded-full font-bold hover:scale-105 transition-all duration-300 mb-3"
+              className="gov-btn-primary w-full mb-3 flex items-center justify-center space-x-2"
             >
-              📸 Capture Photo
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+              </svg>
+              <span>Capture Image</span>
             </button>
-            <br />
             <button
               onClick={handleCancel}
-              className="text-gray-600 underline hover:text-gray-800"
+              className="text-gray-500 text-sm hover:text-gray-700 transition-colors"
             >
-              Cancel
+              Cancel Operation
             </button>
           </div>
         )}
 
         {capturedImage && (
-          <div className="text-center">
-            <img
-              src={capturedImage}
-              alt="Captured trash"
-              className="w-full rounded-2xl mb-4 border-2 border-white"
-            />
+          <div>
+            <div className="mb-4">
+              <img
+                src={capturedImage}
+                alt="Captured location documentation"
+                className="w-full rounded-lg border border-gray-300"
+              />
+            </div>
 
             {isGettingLocation && (
-              <div className="mb-4">
-                <div className="animate-pulse text-lg">
-                  📍 Getting your location...
+              <div className="mb-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                <div className="flex items-center space-x-3">
+                  <div className="gov-spinner h-5 w-5"></div>
+                  <span className="text-sm text-gray-700">Acquiring GPS coordinates...</span>
                 </div>
               </div>
             )}
 
             {location && (
-              <div className="mb-4 p-3 bg-gradient-to-r from-green-100 to-blue-100 rounded-2xl border-2 border-white">
-                <p className="text-sm font-semibold text-gray-700">
-                  📍 Location: {location.latitude.toFixed(4)},{" "}
-                  {location.longitude.toFixed(4)}
-                </p>
+              <div className="mb-4 p-4 bg-green-50 border border-green-200 rounded-lg">
+                <div className="flex items-center space-x-2 mb-2">
+                  <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  <span className="text-sm font-semibold text-gray-700">Location Acquired</span>
+                </div>
+                <div className="grid grid-cols-2 gap-2 text-xs">
+                  <div>
+                    <span className="text-gray-500">Latitude:</span>
+                    <p className="font-mono text-gray-900">{location.latitude.toFixed(6)}°</p>
+                  </div>
+                  <div>
+                    <span className="text-gray-500">Longitude:</span>
+                    <p className="font-mono text-gray-900">{location.longitude.toFixed(6)}°</p>
+                  </div>
+                </div>
               </div>
             )}
 
-            <div className="flex gap-3 justify-center">
-              <button
-                onClick={saveTrashReport}
-                disabled={!location}
-                className={`px-4 py-2 rounded-full font-bold transition-all duration-300 ${
-                  location
-                    ? "lollipop-btn text-white hover:scale-105"
-                    : "bg-gray-300 text-gray-500 cursor-not-allowed"
-                }`}
-              >
-                ✨ Report Trash! 🗑️
-              </button>
+            <div className="flex gap-3">
               <button
                 onClick={handleCancel}
-                className="bg-gray-200 text-gray-700 px-4 py-2 rounded-full font-bold hover:bg-gray-300 transition-all duration-300"
+                className="flex-1 px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition-colors font-medium"
               >
                 Cancel
+              </button>
+              <button
+                onClick={saveLocationReport}
+                disabled={!location}
+                className={`flex-1 flex items-center justify-center space-x-2 ${
+                  location
+                    ? "gov-btn-primary"
+                    : "bg-gray-300 text-gray-500 cursor-not-allowed border-2 border-gray-400 rounded-md px-4 py-2"
+                }`}
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <span>Submit Report</span>
               </button>
             </div>
           </div>
