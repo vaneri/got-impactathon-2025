@@ -93,37 +93,37 @@ export default function Home() {
     <div className="min-h-screen">
       {/* Header */}
       <header className="gov-header">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 md:py-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-              <div className="w-16 h-16 bg-white rounded-lg flex items-center justify-center shadow-lg">
-                <svg className="w-10 h-10 text-blue-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="flex items-center space-x-2 md:space-x-4">
+              <div className="w-12 h-12 md:w-14 md:h-14 bg-white rounded-lg flex items-center justify-center shadow-lg flex-shrink-0">
+                <svg className="w-7 h-7 md:w-9 md:h-9 text-blue-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
                 </svg>
               </div>
-              <div>
-                <h1 className="text-3xl font-bold mb-1" style={{color: '#ffffff'}}>
-                  Community Geographic Information System
+              <div className="min-w-0">
+                <h1 className="text-lg md:text-2xl lg:text-3xl font-bold mb-0.5 md:mb-1 truncate" style={{color: '#ffffff'}}>
+                  Community GIS
                 </h1>
-                <p className="text-sm font-medium" style={{color: '#bfdbfe'}}>
-                  Environmental Monitoring & Asset Management Platform
+                <p className="text-xs md:text-sm font-medium hidden sm:block" style={{color: '#bfdbfe'}}>
+                  Environmental Monitoring & Asset Management
                 </p>
-                <div className="flex items-center space-x-2 mt-2">
-                  <div className="env-badge flex items-center space-x-1 px-3 py-1 rounded-full" style={{
+                <div className="flex items-center space-x-2 mt-1 md:mt-2">
+                  <div className="env-badge flex items-center space-x-1 px-2 md:px-3 py-0.5 md:py-1 rounded-full" style={{
                     backgroundColor: 'rgba(22, 163, 74, 0.9)',
                     border: '1px solid #4ade80'
                   }}>
-                    <svg className="w-4 h-4 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20" style={{color: '#dcfce7'}}>
+                    <svg className="w-3 h-3 md:w-4 md:h-4 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20" style={{color: '#dcfce7'}}>
                       <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM4.332 8.027a6.012 6.012 0 011.912-2.706C6.512 5.73 6.974 6 7.5 6A1.5 1.5 0 019 7.5V8a2 2 0 004 0 2 2 0 011.523-1.943A5.977 5.977 0 0116 10c0 .34-.028.675-.083 1H15a2 2 0 00-2 2v2.197A5.973 5.973 0 0110 16v-2a2 2 0 00-2-2 2 2 0 01-2-2 2 2 0 00-1.668-1.973z" clipRule="evenodd" />
                     </svg>
-                    <span className="env-badge-text text-xs font-semibold" style={{color: '#dcfce7'}}>Environmental Impact Initiative</span>
+                    <span className="env-badge-text text-[10px] md:text-xs font-semibold whitespace-nowrap" style={{color: '#dcfce7'}}>Eco-Friendly</span>
                   </div>
                 </div>
               </div>
             </div>
-            <div className="text-right">
-              <div className="text-sm font-medium" style={{color: '#bfdbfe'}}>Community Platform</div>
-              <div className="font-semibold text-lg" style={{color: '#ffffff'}}>{new Date().toLocaleDateString()}</div>
+            <div className="text-right flex-shrink-0">
+              <div className="text-xs md:text-sm font-medium" style={{color: '#bfdbfe'}}>Platform</div>
+              <div className="font-semibold text-sm md:text-lg" style={{color: '#ffffff'}}>{new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</div>
             </div>
           </div>
         </div>
@@ -131,70 +131,19 @@ export default function Home() {
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Statistics Bar */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-          <div className="gov-card p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600">Total Locations</p>
-                <p className="text-3xl font-bold text-primary">{mapData.markers.length}</p>
-              </div>
-              <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                </svg>
-              </div>
-            </div>
-          </div>
-          <div className="gov-card p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600">Active Reports</p>
-                <p className="text-3xl font-bold text-success">{Math.floor(mapData.markers.length * 0.6)}</p>
-              </div>
-              <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-                <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-              </div>
-            </div>
-          </div>
-          <div className="gov-card p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600">Pending Review</p>
-                <p className="text-3xl font-bold text-warning">{Math.floor(mapData.markers.length * 0.3)}</p>
-              </div>
-              <div className="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center">
-                <svg className="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-              </div>
-            </div>
-          </div>
-          <div className="gov-card p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600">System Status</p>
-                <p className="text-lg font-semibold text-success">Operational</p>
-              </div>
-              <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-                <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-
         {/* Map Section */}
         <div className="gov-card p-6 mb-8 relative">
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-bold text-gray-800">
-              Geographic Data Visualization
+          <div className="mb-6">
+            <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">
+              Report Anything, Anytime, Anywhere
             </h2>
-            <div className="flex items-center space-x-2">
+            <p className="text-gray-600 text-sm md:text-base leading-relaxed">
+              Capture waste, infrastructure defects, environmental hazards, and community concerns in real-time. 
+              Your reports make our community cleaner, safer, and better for everyone.
+            </p>
+            <div className="flex items-center space-x-2 mt-3">
               <span className="status-badge status-active">Live Data</span>
-              <span className="text-sm text-gray-600">Last updated: {new Date().toLocaleTimeString()}</span>
+              <span className="text-sm text-gray-500">Updated: {new Date().toLocaleTimeString()}</span>
             </div>
           </div>
           <div className="rounded-lg overflow-hidden border border-gray-200 shadow-sm" style={{height: '500px'}}>
@@ -203,18 +152,61 @@ export default function Home() {
               onMarkerClick={handleMarkerClick}
             />
           </div>
+        </div>
 
-          {/* Professional Action Button */}
-          <button
-            onClick={handleOpenCamera}
-            className="gov-btn-primary absolute bottom-10 right-10 flex items-center space-x-2"
-            title="Submit new location data"
-          >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-            </svg>
-            <span>New Report</span>
-          </button>
+        {/* Statistics Bar - Below Map */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 mb-8">
+          <div className="gov-card p-4 md:p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-xs md:text-sm font-medium text-gray-600">Total Locations</p>
+                <p className="text-2xl md:text-3xl font-bold text-primary">{mapData.markers.length}</p>
+              </div>
+              <div className="w-10 h-10 md:w-12 md:h-12 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                <svg className="w-5 h-5 md:w-6 md:h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+              </div>
+            </div>
+          </div>
+          <div className="gov-card p-4 md:p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-xs md:text-sm font-medium text-gray-600">Active Reports</p>
+                <p className="text-2xl md:text-3xl font-bold text-success">{Math.floor(mapData.markers.length * 0.6)}</p>
+              </div>
+              <div className="w-10 h-10 md:w-12 md:h-12 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                <svg className="w-5 h-5 md:w-6 md:h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+            </div>
+          </div>
+          <div className="gov-card p-4 md:p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-xs md:text-sm font-medium text-gray-600">Pending Review</p>
+                <p className="text-2xl md:text-3xl font-bold text-warning">{Math.floor(mapData.markers.length * 0.3)}</p>
+              </div>
+              <div className="w-10 h-10 md:w-12 md:h-12 bg-yellow-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                <svg className="w-5 h-5 md:w-6 md:h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+            </div>
+          </div>
+          <div className="gov-card p-4 md:p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-xs md:text-sm font-medium text-gray-600">System Status</p>
+                <p className="text-base md:text-lg font-semibold text-success">Operational</p>
+              </div>
+              <div className="w-10 h-10 md:w-12 md:h-12 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* Environmental Impact Banner */}
@@ -343,6 +335,26 @@ export default function Home() {
           </div>
         </div>
       </main>
+
+      {/* Floating Action Button - Bottom Left */}
+      <button
+        onClick={handleOpenCamera}
+        className="fixed bottom-6 left-6 z-50 w-16 h-16 md:w-20 md:h-20 bg-primary hover:bg-primary-dark shadow-2xl rounded-full flex flex-col items-center justify-center transition-all duration-300 hover:scale-110 group"
+        style={{
+          backgroundColor: '#1e40af',
+          boxShadow: '0 10px 25px -5px rgba(30, 64, 175, 0.5), 0 8px 10px -6px rgba(30, 64, 175, 0.3)'
+        }}
+        title="Report Issue"
+        aria-label="Report new environmental issue"
+      >
+        <svg className="w-8 h-8 md:w-10 md:h-10 text-white mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+        </svg>
+        <span className="text-[10px] md:text-xs text-white font-semibold uppercase tracking-wide">Report</span>
+        
+        {/* Pulse animation ring */}
+        <span className="absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75 animate-ping group-hover:opacity-0"></span>
+      </button>
 
       {/* Image Modal */}
       <ImageModal

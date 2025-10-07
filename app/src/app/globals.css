@@ -222,6 +222,54 @@ textarea:focus {
   100% { transform: rotate(360deg); }
 }
 
+/* Floating Action Button */
+.fab-report {
+  position: fixed;
+  bottom: 1.5rem;
+  left: 1.5rem;
+  z-index: 50;
+  width: 4rem;
+  height: 4rem;
+  background: var(--primary);
+  border-radius: 50%;
+  box-shadow: 0 10px 25px -5px rgba(30, 64, 175, 0.5), 0 8px 10px -6px rgba(30, 64, 175, 0.3);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  border: none;
+}
+
+.fab-report:hover {
+  background: var(--primary-dark);
+  transform: scale(1.1) translateY(-2px);
+  box-shadow: 0 20px 35px -5px rgba(30, 64, 175, 0.6), 0 12px 15px -6px rgba(30, 64, 175, 0.4);
+}
+
+.fab-report:active {
+  transform: scale(0.95);
+}
+
+@media (min-width: 768px) {
+  .fab-report {
+    width: 5rem;
+    height: 5rem;
+  }
+}
+
+/* Ensure FAB is always visible and accessible */
+.fab-report {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Smooth pulse animation for FAB */
+@keyframes fab-pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
 /* Professional Map Marker Styles */
 .professional-map-marker {
   background: transparent !important;
