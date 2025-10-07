@@ -19,45 +19,56 @@ export interface MapData {
   zoom: number;
 }
 
-// Data service abstraction - replace this with your actual data source
+// Data service abstraction - fetches from API
 export class MapDataService {
   static async getMapData(): Promise<MapData> {
-    // This is dummy data - replace with your actual API call or database query
-    return {
-      center: {
-        latitude: 57.6877,
-        longitude: 11.9468,
-      },
-      zoom: 13,
-      markers: [
-        {
-          id: "1",
-          latitude: 57.6877,
-          longitude: 11.9468,
-          title: "Slottskogen Park Bench",
-          description: "Trash bag and cleanup gloves ready for action",
-          imageUrl: "/cleanup_1.png",
-          imageAlt: "Cleanup gloves and trash bag on park bench",
+    try {
+      // Dynamic import to avoid server-side issues
+      const { ApiService } = await import("../services/apiService");
+
+      // Fetch images from API
+      const images = await ApiService.getImages();
+
+      // Convert API images to map markers
+      const markers: MapMarker[] = images
+        .filter((img) => img.latitude && img.longitude) // Only images with coordinates
+        .map((img) => ({
+          id: img.id.toString(),
+          latitude: img.latitude!,
+          longitude: img.longitude!,
+          title: img.categoryNameEn || `Report #${img.id}`,
+          description:
+            img.description ||
+            `Submitted on ${new Date(
+              img.uploadTimestamp
+            ).toLocaleDateString()}`,
+          imageUrl: ApiService.getImageUrl(img.filename),
+          imageAlt: img.originalFilename,
+          category: img.categoryNameEn,
+          reportDescription: img.description,
+        }));
+
+      // Return Gothenburg center by default
+      return {
+        center: {
+          latitude: 57.7089, // Gothenburg center
+          longitude: 11.9746,
         },
-        {
-          id: "2",
-          latitude: 57.689,
-          longitude: 11.945,
-          title: "Slottskogen Cleanup Zone",
-          description: "Another area needing environmental love",
-          imageUrl: "/cleanup_2.png",
-          imageAlt: "Trash cleanup supplies on park bench",
+        zoom: 13,
+        markers,
+      };
+    } catch (error) {
+      console.error("Failed to load map data from API:", error);
+
+      // Return default Gothenburg location with no markers on error
+      return {
+        center: {
+          latitude: 57.7089,
+          longitude: 11.9746,
         },
-        {
-          id: "3",
-          latitude: 57.686,
-          longitude: 11.949,
-          title: "Park Maintenance Area",
-          description: "Equipment ready for making the park sparkle clean",
-          imageUrl: "/cleanup_1.png",
-          imageAlt: "Park cleanup equipment and supplies",
-        },
-      ],
-    };
+        zoom: 13,
+        markers: [],
+      };
+    }
   }
 }

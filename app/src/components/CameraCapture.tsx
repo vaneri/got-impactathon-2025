@@ -101,33 +101,54 @@ export default function CameraCapture({
     }
   }, [stopCamera, getCurrentLocation]);
 
-  const saveLocationReport = useCallback(() => {
+  const saveLocationReport = useCallback(async () => {
     if (!capturedImage || !location) return;
 
-    // Mock storage - replace with actual API call later
-    const newMarker: MapMarker = {
-      id: `report-${Date.now()}`,
-      latitude: location.latitude,
-      longitude: location.longitude,
-      title: category || `Location Report #${Date.now().toString().slice(-6)}`,
-      description: `Submitted by field operator on ${new Date().toLocaleString()}`,
-      imageUrl: capturedImage, // In real app, this would be uploaded to server
-      imageAlt: "Field documentation - geographic location",
-      category: category || undefined,
-      reportDescription: reportDescription || undefined,
-    };
+    try {
+      // Convert data URL to Blob
+      const response = await fetch(capturedImage);
+      const blob = await response.blob();
 
-    // Add to map
-    onNewMarker(newMarker);
+      // Upload to API
+      const { ApiService } = await import("../services/apiService");
+      const uploadedImage = await ApiService.uploadImage(
+        blob,
+        location.latitude,
+        location.longitude,
+        category || undefined,
+        reportDescription || undefined
+      );
 
-    // Reset state
-    setCapturedImage(null);
-    setLocation(null);
-    setCategory("");
-    setReportDescription("");
-    
-    // Show success modal
-    setShowSuccessModal(true);
+      if (uploadedImage) {
+        // Create marker from uploaded image
+        const newMarker: MapMarker = {
+          id: uploadedImage.id.toString(),
+          latitude: uploadedImage.latitude!,
+          longitude: uploadedImage.longitude!,
+          title: uploadedImage.categoryNameEn || `Report #${uploadedImage.id}`,
+          description: uploadedImage.description || `Submitted on ${new Date().toLocaleString()}`,
+          imageUrl: ApiService.getImageUrl(uploadedImage.filename),
+          imageAlt: uploadedImage.originalFilename,
+          category: uploadedImage.categoryNameEn,
+          reportDescription: uploadedImage.description,
+        };
+
+        // Add to map
+        onNewMarker(newMarker);
+
+        // Reset state
+        setCapturedImage(null);
+        setLocation(null);
+        setCategory("");
+        setReportDescription("");
+        
+        // Show success modal
+        setShowSuccessModal(true);
+      }
+    } catch (error) {
+      console.error("Failed to upload image:", error);
+      alert("Failed to upload report. Please try again.");
+    }
   }, [capturedImage, location, category, reportDescription, onNewMarker]);
 
   const handleCancel = useCallback(() => {

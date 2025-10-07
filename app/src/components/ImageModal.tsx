@@ -90,7 +90,7 @@ export default function ImageModal({
                 </svg>
                 <span className="text-sm font-semibold text-gray-700">Latitude</span>
               </div>
-              <p className="text-lg font-mono text-gray-900">{marker.latitude.toFixed(6)}°</p>
+              <p className="text-lg font-mono text-gray-900">{Number.isFinite(Number(marker.latitude)) ? Number(marker.latitude).toFixed(6) : 'N/A'}°</p>
             </div>
             <div className="border border-gray-200 rounded-lg p-4">
               <div className="flex items-center space-x-2 mb-2">
@@ -99,7 +99,7 @@ export default function ImageModal({
                 </svg>
                 <span className="text-sm font-semibold text-gray-700">Longitude</span>
               </div>
-              <p className="text-lg font-mono text-gray-900">{marker.longitude.toFixed(6)}°</p>
+              <p className="text-lg font-mono text-gray-900">{Number.isFinite(Number(marker.longitude)) ? Number(marker.longitude).toFixed(6) : 'N/A'}°</p>
             </div>
           </div>
 

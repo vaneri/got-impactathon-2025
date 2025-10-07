@@ -19,18 +19,22 @@ import heatmapRoutes from "./routes/heatmapRoutes";
 import categoryRoutes from "./routes/categoryRoutes";
 
 const app: express.Application = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001; // Default to 3001 to avoid conflict with Next.js
 
 // Basic middleware
 app.use(cors());
 app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ extended: true, limit: "50mb" }));
 
-// Static files (for serving uploaded images)
-app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
+// Request logging
+app.use((req, res, next) => {
+  console.log(`📨 ${req.method} ${req.url}`);
+  next();
+});
 
-// Health check endpoint
+// Health check endpoint (define BEFORE other routes)
 app.get("/health", (req, res) => {
+  console.log("✅ Health check hit");
   res.status(200).json({
     status: "OK",
     timestamp: new Date().toISOString(),
@@ -41,6 +45,13 @@ app.get("/health", (req, res) => {
 app.use("/api/images", imageRoutes);
 app.use("/api/heatmap", heatmapRoutes);
 app.use("/api/categories", categoryRoutes);
+
+// Static files (for serving uploaded images) - after routes
+try {
+  app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
+} catch (error) {
+  console.warn("Warning: Could not set up uploads directory:", error);
+}
 
 // Root endpoint
 app.get("/", (req, res) => {
@@ -56,6 +67,7 @@ app.get("/", (req, res) => {
       health: "/health",
       images: "/api/images",
       heatmap: "/api/heatmap",
+      categories: "/api/categories",
     },
     documentation: {
       swagger: "/api/docs",
@@ -64,6 +76,22 @@ app.get("/", (req, res) => {
     timestamp: new Date().toISOString(),
   });
 });
+
+// Global error handler
+app.use(
+  (
+    err: any,
+    req: express.Request,
+    res: express.Response,
+    next: express.NextFunction
+  ) => {
+    console.error("❌ Error:", err);
+    res.status(500).json({
+      error: "Internal Server Error",
+      message: err.message || "An unexpected error occurred",
+    });
+  }
+);
 
 // Start server
 async function startServer(): Promise<void> {
