@@ -33,13 +33,21 @@ app.use("/api/heatmap", heatmapRoutes);
 // Root endpoint
 app.get("/", (req, res) => {
   res.json({
-    message: "Simple Geotag Image API Server (TypeScript)",
+    name: "Municipal Geographic Information System API",
     version: "1.0.0",
+    description:
+      "Enterprise-grade geographic data management and visualization platform",
+    status: "operational",
     endpoints: {
       health: "/health",
       images: "/api/images",
       heatmap: "/api/heatmap",
     },
+    documentation: {
+      swagger: "/api/docs",
+      support: "support@municipality.gov",
+    },
+    timestamp: new Date().toISOString(),
   });
 });
 
@@ -49,8 +57,22 @@ async function startServer(): Promise<void> {
     await database.connect();
 
     app.listen(PORT, () => {
-      console.log(`🚀 Server running on port ${PORT}`);
-      console.log(`🌐 Health check: http://localhost:${PORT}/health`);
+      console.log(`╔══════════════════════════════════════════════════════╗`);
+      console.log(`║  Municipal Geographic Information System API        ║`);
+      console.log(`╠══════════════════════════════════════════════════════╣`);
+      console.log(`║  Status:        OPERATIONAL                          ║`);
+      console.log(
+        `║  Port:          ${PORT}                                     ║`
+      );
+      console.log(
+        `║  Environment:   ${
+          process.env.NODE_ENV || "development"
+        }                      ║`
+      );
+      console.log(
+        `║  Health Check:  http://localhost:${PORT}/health         ║`
+      );
+      console.log(`╚══════════════════════════════════════════════════════╝`);
     });
   } catch (error) {
     console.error("Failed to start server:", error);

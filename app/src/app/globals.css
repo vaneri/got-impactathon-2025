@@ -2,27 +2,21 @@
 @import "leaflet/dist/leaflet.css";
 
 :root {
-  --background: linear-gradient(
-    135deg,
-    #ff9a9e 0%,
-    #fecfef 25%,
-    #fecfef 50%,
-    #fad0c4 75%,
-    #a8edea 100%
-  );
-  --foreground: #2d3748;
-  --rainbow-1: #ff6b6b;
-  --rainbow-2: #4ecdc4;
-  --rainbow-3: #45b7d1;
-  --rainbow-4: #96ceb4;
-  --rainbow-5: #ffeaa7;
-  --rainbow-6: #dda0dd;
-  --ice-cream-pink: #ffb3d9;
-  --ice-cream-mint: #b3ffcc;
-  --ice-cream-vanilla: #fff5b7;
-  --lollipop-red: #ff4757;
-  --lollipop-blue: #3742fa;
-  --sparkle: #ffd700;
+  /* Professional Government Color Palette */
+  --background: #f8f9fa;
+  --foreground: #1a1d23;
+  --primary: #1e40af; /* Government Blue */
+  --primary-dark: #1e3a8a;
+  --primary-light: #3b82f6;
+  --secondary: #475569; /* Professional Gray */
+  --secondary-light: #64748b;
+  --accent: #0891b2; /* Official Teal */
+  --success: #059669; /* Success Green */
+  --warning: #d97706; /* Warning Amber */
+  --danger: #dc2626; /* Alert Red */
+  --border: #e2e8f0;
+  --card-bg: #ffffff;
+  --header-gradient: linear-gradient(135deg, #1e3a8a 0%, #1e40af 50%, #3b82f6 100%);
 }
 
 @theme inline {
@@ -32,126 +26,176 @@
   --font-mono: var(--font-geist-mono);
 }
 
-/* Rainbow sparkle animation */
-@keyframes sparkle {
+/* Professional Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(-10px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes pulse-subtle {
   0%,
   100% {
     opacity: 1;
-    transform: scale(1) rotate(0deg);
   }
   50% {
-    opacity: 0.7;
-    transform: scale(1.1) rotate(180deg);
+    opacity: 0.9;
   }
 }
 
-@keyframes rainbow {
-  0% {
-    filter: hue-rotate(0deg);
-  }
-  100% {
-    filter: hue-rotate(360deg);
-  }
+/* Professional Header */
+.gov-header {
+  background: var(--header-gradient);
+  border-bottom: 4px solid var(--primary-dark);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
 
-@keyframes float {
-  0%,
-  100% {
-    transform: translateY(0px);
-  }
-  50% {
-    transform: translateY(-10px);
-  }
+/* Professional Card Styles */
+.gov-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
 }
 
-/* Sparkle effects */
-.sparkle {
-  position: relative;
-  overflow: hidden;
+.gov-card:hover {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  transform: translateY(-2px);
 }
 
-.sparkle::before {
-  content: "✨";
-  position: absolute;
-  top: 10%;
-  right: 10%;
-  animation: sparkle 2s infinite;
-  font-size: 1.2rem;
-  z-index: 1;
+/* Professional Buttons */
+.gov-btn-primary {
+  background: var(--primary);
+  color: white;
+  border: 2px solid var(--primary-dark);
+  border-radius: 0.375rem;
+  padding: 0.75rem 1.5rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 6px -1px rgba(30, 64, 175, 0.3);
 }
 
-.sparkle::after {
-  content: "⭐";
-  position: absolute;
-  bottom: 10%;
-  left: 10%;
-  animation: sparkle 2.5s infinite reverse;
-  font-size: 1rem;
-  z-index: 1;
+.gov-btn-primary:hover {
+  background: var(--primary-dark);
+  box-shadow: 0 10px 15px -3px rgba(30, 64, 175, 0.4);
+  transform: translateY(-1px);
 }
 
-/* Rainbow gradient backgrounds */
-.rainbow-bg {
-  background: linear-gradient(
-    45deg,
-    #ff6b6b,
-    #4ecdc4,
-    #45b7d1,
-    #96ceb4,
-    #ffeaa7,
-    #dda0dd
-  );
-  background-size: 300% 300%;
-  animation: rainbow 4s ease infinite;
-}
-
-.ice-cream-bg {
-  background: linear-gradient(135deg, #ffb3d9 0%, #b3ffcc 50%, #fff5b7 100%);
-}
-
-.lollipop-btn {
-  background: linear-gradient(45deg, #ff4757, #3742fa);
-  background-size: 200% 200%;
-  animation: rainbow 3s ease infinite;
-  border-radius: 50px;
-  box-shadow: 0 4px 15px rgba(255, 71, 87, 0.4);
+.gov-btn-secondary {
+  background: var(--secondary);
+  color: white;
+  border: 2px solid var(--secondary-light);
+  border-radius: 0.375rem;
+  padding: 0.75rem 1.5rem;
+  font-weight: 600;
   transition: all 0.3s ease;
 }
 
-.lollipop-btn:hover {
-  transform: translateY(-2px) scale(1.05);
-  box-shadow: 0 8px 25px rgba(255, 71, 87, 0.6);
+/* Status Badges */
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.375rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+}
+
+.status-active {
+  background: #d1fae5;
+  color: #065f46;
+  border: 1px solid #10b981;
+}
+
+.status-pending {
+  background: #fef3c7;
+  color: #92400e;
+  border: 1px solid #f59e0b;
+}
+
+.status-resolved {
+  background: #dbeafe;
+  color: #1e40af;
+  border: 1px solid #3b82f6;
 }
 
 body {
-  background: linear-gradient(
-    135deg,
-    #ff9a9e 0%,
-    #fecfef 25%,
-    #fecfef 50%,
-    #fad0c4 75%,
-    #a8edea 100%
-  );
-  background-attachment: fixed;
+  background: var(--background);
   color: var(--foreground);
-  font-family: "Comic Sans MS", cursive, Arial, Helvetica, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   min-height: 100vh;
+  line-height: 1.6;
 }
 
-/* Fun scrollbar */
+/* Professional Scrollbar */
 ::-webkit-scrollbar {
   width: 12px;
 }
 
 ::-webkit-scrollbar-track {
-  background: linear-gradient(45deg, #ffb3d9, #b3ffcc);
+  background: #f1f5f9;
+  border-left: 1px solid var(--border);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(45deg, #ff4757, #3742fa);
-  border-radius: 10px;
+  background: var(--secondary);
+  border-radius: 6px;
+  border: 2px solid #f1f5f9;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(45deg, #ff3838, #2f32e6);
+  background: var(--primary);
+}
+
+/* Professional Typography */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--foreground);
+}
+
+p {
+  margin-bottom: 1rem;
+}
+
+/* Focus States for Accessibility */
+button:focus, 
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+/* Loading Spinner */
+.gov-spinner {
+  border: 3px solid var(--border);
+  border-top: 3px solid var(--primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
