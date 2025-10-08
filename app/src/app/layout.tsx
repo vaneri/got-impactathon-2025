@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Community Geographic Information System",
-  description: "Community Geographic Information System",
+  title: "Gothenburg FaultReport",
+  description: "Gothenburg FaultReport",
 };
 
 export default function RootLayout({

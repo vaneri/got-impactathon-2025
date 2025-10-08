@@ -44,7 +44,7 @@ export default function InteractiveMap({
   // Don't render map on server side
   if (!isClient || !L) {
     return (
-      <div className="w-full h-96 bg-gray-200 flex items-center justify-center rounded-lg">
+      <div className="w-full h-full bg-gray-200 flex items-center justify-center rounded-lg">
         <p className="text-gray-600">Loading map...</p>
       </div>
     );
@@ -77,7 +77,7 @@ export default function InteractiveMap({
   };
 
   return (
-    <div className="w-full h-96 rounded-lg overflow-hidden shadow-lg">
+    <div className="w-full h-full rounded-lg overflow-hidden shadow-lg">
       <MapContainer
         center={[mapData.center.latitude, mapData.center.longitude]}
         zoom={mapData.zoom}
